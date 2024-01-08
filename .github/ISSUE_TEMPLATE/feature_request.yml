@@ -1,0 +1,39 @@
+name: 🛠️ Feature Request
+description: File a feature request
+title: "[Feature]: "
+labels: ["Type: Feature", "Status: Triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks :heart: for taking the time to fill out this feature request!
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the feature you're interested in.
+      placeholder: Tell us what you want!
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Suggested Solution
+      description: Describe the solution you'd like. A clear and concise description of what you want to happen.
+      placeholder: How can the feature be implemented?
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Add any additional information that help to understand the feature request.
+    validations:
+      required: false
+  - type: checkboxes
+    id: search
+    attributes:
+      label: Search
+      options:
+        - label: I have used the search function to check whether the feature request already exists.
+          required: true

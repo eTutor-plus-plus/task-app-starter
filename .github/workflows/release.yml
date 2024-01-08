@@ -1,0 +1,37 @@
+# Creates a new PR for the release
+name: Release Library
+
+# Run on merged pull request
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - CHANGELOG.md
+
+# Sets permissions
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # Create PR
+  create-pr:
+    runs-on: ubuntu-latest
+    if: ${{ startsWith(github.event.head_commit.message, 'chore(release):') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Split commit message
+        env:
+          MSG: ${{ github.event.head_commit.message }}
+        id: split
+        run: |
+          TMP="$(echo "${MSG##*:}" | tr -d '[:space:]')"
+          echo "VERSION=$TMP" >> "$GITHUB_OUTPUT"
+
+      - name: Create PR
+        run: "gh pr create -B main -H develop --title 'chore(publish): v${{ steps.split.outputs.VERSION }}' --body 'Release version v${{ steps.split.outputs.VERSION }}'"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

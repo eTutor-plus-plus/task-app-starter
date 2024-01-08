@@ -1,0 +1,14 @@
+{
+    "bumpFiles": [
+        {
+            "filename": "pom.xml",
+            "updater": "update-pom-version.js"
+        },
+        {
+            "filename": "package.json"
+        },
+        {
+            "filename": "package-lock.json"
+        }
+    ]
+}

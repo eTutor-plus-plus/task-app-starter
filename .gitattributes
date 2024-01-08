@@ -1,0 +1,38 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Scripts
+*.bash     text eol=lf
+mvnw       text eol=lf
+*.sh       text eol=lf
+*.bat      text eol=crlf
+*.cmd      text eol=crlf
+*.ps1      text eol=crlf
+
+# Java sources
+*.java          text diff=java
+
+# These files are text and should be normalized
+*.htm           text diff=html
+*.html          text diff=html
+*.properties    text
+*.xml           text
+*.sql           text
+*.txt           text
+*.yaml          text
+*.yml           text
+*.json          text
+*.markdown      text
+*.md            text
+CHANGELOG       text
+CONTRIBUTING    text
+readme          text
+*README*        text
+
+# CONFIGS
+*.conf          text
+*.config        text
+.editorconfig   text
+.gitattributes  text
+.gitconfig      text
+.gitignore      text

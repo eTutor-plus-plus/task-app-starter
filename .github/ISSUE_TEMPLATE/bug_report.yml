@@ -1,0 +1,54 @@
+name: 🐞 Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["Type: Bug", "Status: Triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks :heart: for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How can the bug be reproduced?
+      description: Tell us how we can reproduce the bug.
+      placeholder: What did you do?
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of our library are you using?
+      placeholder: v1.10.0
+    validations:
+      required: true
+  - type: input
+    id: jdk-version
+    attributes:
+      label: JDK Version
+      description: What version of Java JDK are you using?
+      placeholder: 21.0.1
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: checkboxes
+    id: search
+    attributes:
+      label: Search
+      options:
+        - label: I have used the search function to check whether the issue already exists.
+          required: true

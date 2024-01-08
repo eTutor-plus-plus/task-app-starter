@@ -1,0 +1,20 @@
+{
+    "name": "etutor-task-app-starter",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "commit": "cz",
+        "release": "commit-and-tag-version"
+    },
+    "dependencies": {
+        "commit-and-tag-version": "^12.0.0",
+        "commitizen": "^4.3.0",
+        "cz-conventional-changelog": "^3.3.0",
+        "fast-xml-parser": "^4.3.2"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    }
+}
