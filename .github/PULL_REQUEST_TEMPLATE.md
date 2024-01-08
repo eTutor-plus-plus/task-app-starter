@@ -8,7 +8,7 @@ By explaining why you're making a change (or linking to an issue) and what chang
 Closes:
 
 <!-- If there's an existing issue for your change, please link to it above.
-If there's _not_ an existing issue, please open one first to make it more likely that this update will be accepted: https://github.com/martin-temp/task-app-starter/issues/new/choose. -->
+If there's _not_ an existing issue, please open one first to make it more likely that this update will be accepted: https://github.com/eTutor-plus-plus/task-app-starter/issues/new/choose. -->
 
 ### What's being changed (if available, include any code snippets, screenshots, or gifs):
 

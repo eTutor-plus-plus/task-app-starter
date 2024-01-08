@@ -4,7 +4,7 @@ Library for eTutor Task Apps.
 
 This library can be used to create a new eTutor Task App with Spring boot.
 It provides classes for API-Key Authentication, basic JPA entities and services and REST controller implementations.
-See [Javadoc](https://martin-temp.github.io/task-app-starter/) for more information.
+See [Javadoc](https://eTutor-plus-plus.github.io/task-app-starter/) for more information.
 
 ## Usage
 
@@ -43,7 +43,7 @@ Replace `USERNAME` with your GitHub username and `TOKEN` with a classic GitHub a
                 </repository>
                 <repository>
                     <id>github</id>
-                    <url>https://maven.pkg.github.com/martin-temp/task-app-starter</url>
+                    <url>https://maven.pkg.github.com/eTutor-plus-plus/task-app-starter</url>
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
@@ -64,8 +64,8 @@ Replace `USERNAME` with your GitHub username and `TOKEN` with a classic GitHub a
     </servers>
 </settings>
 ```
-Alternatively, you can download the `https://github.com/martin-temp/task-app-starter` project and install it locally with `mvn install`.
+Alternatively, you can download the `https://github.com/eTutor-plus-plus/task-app-starter` project and install it locally with `mvn install`.
 
 ## Development
 
-See [CONTRIBUTING.md](https://github.com/martin-temp/task-app-starter/blob/main/CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](https://github.com/eTutor-plus-plus/task-app-starter/blob/main/CONTRIBUTING.md) for details.
