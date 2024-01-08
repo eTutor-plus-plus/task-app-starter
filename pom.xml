@@ -4,7 +4,7 @@
 
     <groupId>at.jku.dke.etutor</groupId>
     <artifactId>etutor-task-app-starter</artifactId>
-    <version>1.0.1</version>
+    <version>0.0.1</version>
 
     <name>eTutor Task-App Starter</name>
     <description>Spring Boot starter for eTutor Task-App applications.</description>
@@ -13,7 +13,7 @@
         <repository>
             <id>github</id>
             <name>GitHub eTutor Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/martin-temp/task-app-starter</url>
+            <url>https://maven.pkg.github.com/eTutor-plus-plus/task-app-starter</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
