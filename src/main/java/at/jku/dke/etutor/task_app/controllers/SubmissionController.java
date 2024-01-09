@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,7 +53,7 @@ public interface SubmissionController<T> {
         summary = "Execute and grade submission",
         description = "Executes and grades a submission. If <code>runInBackground</code> is <code>true</code>, only the submission identifier will be returned; otherwise the evaluation result will be returned. Requires the SUBMIT role.",
         security = @SecurityRequirement(name = "api-key"))
-    ResponseEntity<Serializable> submit(@Valid @RequestBody SubmitSubmissionDto<T> submission,
+    ResponseEntity<Serializable> submit(@RequestBody SubmitSubmissionDto<T> submission,
                                         @Parameter(description = "Whether to run the grading in background or wait for grading to finish.") @RequestParam(required = false, defaultValue = "false") boolean runInBackground,
                                         @Parameter(description = "Whether to persist the submission. Only applies if <code>runInBackground</code> is <code>false</code>.") @RequestParam(required = false, defaultValue = "true") boolean persist);
 

@@ -1,6 +1,7 @@
 package at.jku.dke.etutor.task_app.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -25,6 +26,6 @@ public record ModifyTaskDto<T>(
     @Schema(description = "The maximum achievable points.", example = "10") @NotNull @PositiveOrZero BigDecimal maxPoints,
     @Schema(description = "The task type. If a task app supports more than one task type, this can be used to distinguish between types.", example = "sql", examples = {"sql", "datalog"}) @NotEmpty @Size(max = 100) String taskType,
     @Schema(description = "The task status.") @NotNull TaskStatus status,
-    @Schema(description = "The task type specific data.") @NotNull T additionalData
+    @Schema(description = "The task type specific data.") @Valid @NotNull T additionalData
 ) implements Serializable {
 }

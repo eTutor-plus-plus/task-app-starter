@@ -5,6 +5,7 @@ import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.data.repositories.TaskGroupRepository;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskGroupDto;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -70,7 +71,7 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      */
     @Override
     @Transactional
-    public Serializable create(long id, ModifyTaskGroupDto<S> dto) {
+    public Serializable create(long id, @Valid ModifyTaskGroupDto<S> dto) {
         if (this.repository.existsById(id))
             throw new DuplicateKeyException("Task group " + id + " already exists.");
 
@@ -96,7 +97,7 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      */
     @Override
     @Transactional
-    public Serializable update(long id, ModifyTaskGroupDto<S> dto) {
+    public Serializable update(long id, @Valid ModifyTaskGroupDto<S> dto) {
         var taskGroup = this.repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Task group " + id + " does not exist."));
 
         LOG.info("Updating task group {}", id);

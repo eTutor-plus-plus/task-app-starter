@@ -1,9 +1,7 @@
 package at.jku.dke.etutor.task_app.controllers;
 
-import at.jku.dke.etutor.task_app.data.entities.Submission;
 import at.jku.dke.etutor.task_app.data.entities.Task;
 import at.jku.dke.etutor.task_app.dto.*;
-import at.jku.dke.etutor.task_app.services.BaseSubmissionService;
 import at.jku.dke.etutor.task_app.services.SubmissionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,7 @@
 package at.jku.dke.etutor.task_app.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,6 +20,6 @@ import java.io.Serializable;
 public record ModifyTaskGroupDto<T>(
     @Schema(description = "The task group type. If a task app supports more than one task group type, this can be used to distinguish between types.", example = "sql", examples = {"sql", "datalog"}) @NotEmpty @Size(max = 100) String taskGroupType,
     @Schema(description = "The task group status.") @NotNull TaskStatus status,
-    @Schema(description = "The task group type specific data.") @NotNull T additionalData
+    @Schema(description = "The task group type specific data.") @NotNull @Valid T additionalData
 ) implements Serializable {
 }

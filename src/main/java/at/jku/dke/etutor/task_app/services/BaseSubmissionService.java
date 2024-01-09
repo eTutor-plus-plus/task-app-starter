@@ -11,6 +11,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -70,7 +71,7 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
     @Override
     @Transactional
     @PreAuthorize(AuthConstants.SUBMIT_AUTHORITY)
-    public UUID enqueue(SubmitSubmissionDto<U> submission) {
+    public UUID enqueue(@Valid SubmitSubmissionDto<U> submission) {
         LOG.info("Enqueueing submission of task {} for assignment {} for user {}", submission.taskId(), submission.assignmentId(), submission.userId());
 
         // create submission
@@ -92,7 +93,7 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
     @Override
     @Transactional
     @PreAuthorize(AuthConstants.SUBMIT_AUTHORITY)
-    public GradingResultDto execute(SubmitSubmissionDto<U> submission, boolean persist) {
+    public GradingResultDto execute(@Valid SubmitSubmissionDto<U> submission, boolean persist) {
         S entity = null;
 
         // Persist
