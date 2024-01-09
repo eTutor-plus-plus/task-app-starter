@@ -14,10 +14,3 @@ body:
       description: A clear and concise description of what the bug is.
     validations:
       required: true
-  - type: checkboxes
-    id: search
-    attributes:
-      label: Search
-      options:
-        - label: I have used the search function to check whether the issue already exists.
-          required: true
