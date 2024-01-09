@@ -1,11 +1,9 @@
 package at.jku.dke.etutor.task_app.controllers;
 
-import at.jku.dke.etutor.task_app.dto.GradingDto;
-import at.jku.dke.etutor.task_app.dto.SubmissionDto;
-import at.jku.dke.etutor.task_app.dto.SubmissionMode;
-import at.jku.dke.etutor.task_app.dto.SubmitSubmissionDto;
+import at.jku.dke.etutor.task_app.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,6 +19,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -45,7 +44,8 @@ public interface SubmissionController<T> {
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Submission graded", content = @Content(schema = @Schema(implementation = GradingDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)),
-        @ApiResponse(responseCode = "202", description = "Submission enqueued for grading", content = @Content(schema = @Schema(implementation = UUID.class, description = "The submission identifier."), mediaType = MediaType.TEXT_PLAIN_VALUE)),
+        @ApiResponse(responseCode = "202", description = "Submission enqueued for grading", content = @Content(schema = @Schema(implementation = UUID.class, description = "The submission identifier."),
+            mediaType = MediaType.TEXT_PLAIN_VALUE), headers = @Header(name = "Location", description = "The location of the submission result.")),
         @ApiResponse(responseCode = "400", description = "Invalid submission data", content = @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE)),
         @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE)),
         @ApiResponse(responseCode = "403", description = "Operation not allowed", content = @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE))
@@ -54,9 +54,9 @@ public interface SubmissionController<T> {
         summary = "Execute and grade submission",
         description = "Executes and grades a submission. If <code>runInBackground</code> is <code>true</code>, only the submission identifier will be returned; otherwise the evaluation result will be returned. Requires the SUBMIT role.",
         security = @SecurityRequirement(name = "api-key"))
-    ResponseEntity<Object> submit(@Valid @RequestBody SubmitSubmissionDto<T> submission,
-                                  @Parameter(description = "Whether to run the grading in background or wait for grading to finish.") @RequestParam(required = false, defaultValue = "false") boolean runInBackground,
-                                  @Parameter(description = "Whether to persist the submission. Only applies if <code>runInBackground</code> is <code>false</code>.") @RequestParam(required = false, defaultValue = "true") boolean persist);
+    ResponseEntity<Serializable> submit(@Valid @RequestBody SubmitSubmissionDto<T> submission,
+                                        @Parameter(description = "Whether to run the grading in background or wait for grading to finish.") @RequestParam(required = false, defaultValue = "false") boolean runInBackground,
+                                        @Parameter(description = "Whether to persist the submission. Only applies if <code>runInBackground</code> is <code>false</code>.") @RequestParam(required = false, defaultValue = "true") boolean persist);
 
     /**
      * Returns the evaluation result for a submission.

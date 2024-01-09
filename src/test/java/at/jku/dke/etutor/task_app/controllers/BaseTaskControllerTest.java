@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -59,7 +60,7 @@ class BaseTaskControllerTest {
 
         // Assert
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertEquals(new TaskDto("test"), result.getBody());
+        assertNotNull(result.getBody());
         assertNotNull(result.getHeaders().getLocation());
         assertEquals("/api/task/2", result.getHeaders().getLocation().toString());
     }
@@ -77,6 +78,22 @@ class BaseTaskControllerTest {
         // Assert
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
         assertNull(result.getBody());
+    }
+
+    @Test
+    void updateReturnsValue() {
+        // Arrange
+        var controller = new TaskController();
+        final long id = 2L;
+        var dto = new ModifyTaskDto<>(2L, BigDecimal.TEN, "test", TaskStatus.APPROVED, new AdditionalData("data"));
+        when(controller.getTaskService().update(id, dto)).thenReturn(id);
+
+        // Act
+        var result = controller.update(id, dto);
+
+        // Assert
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertNotNull(result.getBody());
     }
 
     @Test
@@ -112,7 +129,7 @@ class BaseTaskControllerTest {
     private record TaskDto(String data) {
     }
 
-    private static class TestTask extends BaseTask<TestTaskGroup> {
+    private static class TestTask extends BaseTask<TestTaskGroup> implements Serializable {
         private String data;
 
         public TestTask(Long id) {
@@ -129,7 +146,7 @@ class BaseTaskControllerTest {
         }
     }
 
-    private static class TestTaskGroup extends BaseTaskGroup {
+    private static class TestTaskGroup extends BaseTaskGroup implements Serializable {
         public TestTaskGroup(Long id) {
             super(id, TaskStatus.APPROVED);
         }

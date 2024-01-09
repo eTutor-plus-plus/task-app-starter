@@ -2,10 +2,7 @@ package at.jku.dke.etutor.task_app.controllers;
 
 import at.jku.dke.etutor.task_app.data.entities.Submission;
 import at.jku.dke.etutor.task_app.data.entities.Task;
-import at.jku.dke.etutor.task_app.dto.GradingDto;
-import at.jku.dke.etutor.task_app.dto.SubmissionDto;
-import at.jku.dke.etutor.task_app.dto.SubmissionMode;
-import at.jku.dke.etutor.task_app.dto.SubmitSubmissionDto;
+import at.jku.dke.etutor.task_app.dto.*;
 import at.jku.dke.etutor.task_app.services.BaseSubmissionService;
 import at.jku.dke.etutor.task_app.services.SubmissionService;
 import org.springframework.data.domain.Page;
@@ -14,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.UUID;
 
@@ -45,7 +43,7 @@ public abstract class BaseSubmissionController<T extends Task<?>, A> implements 
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<Object> submit(SubmitSubmissionDto<A> submission, boolean runInBackground, boolean persist) {
+    public ResponseEntity<Serializable> submit(SubmitSubmissionDto<A> submission, boolean runInBackground, boolean persist) {
         if (runInBackground) {
             UUID id = this.submissionService.enqueue(submission);
             return ResponseEntity
@@ -54,7 +52,7 @@ public abstract class BaseSubmissionController<T extends Task<?>, A> implements 
                 .contentType(MediaType.TEXT_PLAIN)
                 .body(id.toString());
         } else {
-            BaseSubmissionService.GradingResult result = this.submissionService.execute(submission, persist);
+            GradingResultDto result = this.submissionService.execute(submission, persist);
             var response = ResponseEntity.status(HttpStatus.OK);
             if (result.submissionId() != null)
                 response = response.location(URI.create("/api/submission/" + result.submissionId() + "/result"));

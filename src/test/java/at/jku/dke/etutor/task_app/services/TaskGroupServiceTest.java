@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,7 +60,7 @@ class TaskGroupServiceTest {
         when(service.getRepository().save(any())).thenAnswer(invocation -> new PersistedEntity(invocation.getArgument(0)));
 
         // Act
-        var result = service.create(id, dto);
+        var result = (TaskGroupEntity)service.create(id, dto);
 
         // Assert
         assertEquals(id, result.getId());
@@ -96,9 +97,11 @@ class TaskGroupServiceTest {
         when(service.getRepository().save(any())).thenAnswer(invocation -> new PersistedEntity(invocation.getArgument(0)));
 
         // Act
-        service.update(id, dto);
+        var taskGroupEntity = service.update(id, dto);
 
         // Assert
+        assertNotNull(taskGroupEntity);
+        assertInstanceOf(PersistedEntity.class, taskGroupEntity);
         assertEquals(dto.status(), entity.getStatus());
         assertEquals(dto.additionalData().someData(), entity.getSomeData());
         assertInstanceOf(PersistedEntity.class, service.afterUpdateCalled);
@@ -180,6 +183,11 @@ class TaskGroupServiceTest {
         }
 
         @Override
+        protected Serializable mapToReturnData(TaskGroupEntity taskGroup, boolean create) {
+            return taskGroup;
+        }
+
+        @Override
         protected void beforeCreate(TaskGroupEntity taskGroup) {
             this.beforeCreateCalled = taskGroup;
         }
@@ -205,7 +213,7 @@ class TaskGroupServiceTest {
         }
     }
 
-    private static class TaskGroupEntity extends BaseTaskGroup {
+    private static class TaskGroupEntity extends BaseTaskGroup implements Serializable {
         private String someData;
 
         public TaskGroupEntity() {

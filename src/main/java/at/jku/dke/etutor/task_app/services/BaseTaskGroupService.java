@@ -11,6 +11,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -64,12 +65,12 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      *
      * @param id  The task group identifier.
      * @param dto The task group data.
-     * @return The created task group.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws DuplicateKeyException If a task group with the specified identifier already exists.
      */
     @Override
     @Transactional
-    public G create(long id, ModifyTaskGroupDto<S> dto) {
+    public Serializable create(long id, ModifyTaskGroupDto<S> dto) {
         if (this.repository.existsById(id))
             throw new DuplicateKeyException("Task group " + id + " already exists.");
 
@@ -82,7 +83,7 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
         taskGroup = this.repository.save(taskGroup);
         this.afterCreate(taskGroup);
 
-        return taskGroup;
+        return this.mapToReturnData(taskGroup, true);
     }
 
     /**
@@ -90,11 +91,12 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      *
      * @param id  The task group identifier.
      * @param dto The new task group data.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws EntityNotFoundException If the task group does not exist.
      */
     @Override
     @Transactional
-    public void update(long id, ModifyTaskGroupDto<S> dto) {
+    public Serializable update(long id, ModifyTaskGroupDto<S> dto) {
         var taskGroup = this.repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Task group " + id + " does not exist."));
 
         LOG.info("Updating task group {}", id);
@@ -103,6 +105,8 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
 
         taskGroup = this.repository.save(taskGroup);
         this.afterUpdate(taskGroup);
+
+        return this.mapToReturnData(taskGroup, false);
     }
 
     /**
@@ -139,6 +143,17 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      * @param dto       The new task group data.
      */
     protected abstract void updateTaskGroup(G taskGroup, ModifyTaskGroupDto<S> dto);
+
+    /**
+     * Maps the task group to the data that should be returned to the task administration UI.
+     *
+     * @param taskGroup The task group.
+     * @param create    {@code true}, if the specified task group was just created; {@code false} if the task group was updated.
+     * @return The data to send (might be {@code null}).
+     */
+    protected Serializable mapToReturnData(G taskGroup, boolean create) {
+        return null;
+    }
 
     /**
      * Called before the task group is stored in the database.

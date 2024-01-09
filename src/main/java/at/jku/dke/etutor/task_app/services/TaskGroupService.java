@@ -5,6 +5,7 @@ import at.jku.dke.etutor.task_app.dto.ModifyTaskGroupDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -27,19 +28,20 @@ public interface TaskGroupService<G extends TaskGroup, S> {
      *
      * @param id  The task group identifier.
      * @param dto The task group data.
-     * @return The created task group.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws DuplicateKeyException If a task group with the specified identifier already exists.
      */
-    G create(long id, ModifyTaskGroupDto<S> dto);
+    Serializable create(long id, ModifyTaskGroupDto<S> dto);
 
     /**
      * Updates an existing task group.
      *
      * @param id  The task group identifier.
      * @param dto The new task group data.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws EntityNotFoundException If the task group does not exist.
      */
-    void update(long id, ModifyTaskGroupDto<S> dto);
+    Serializable update(long id, ModifyTaskGroupDto<S> dto);
 
     /**
      * Deletes the task group with the specified identifier.

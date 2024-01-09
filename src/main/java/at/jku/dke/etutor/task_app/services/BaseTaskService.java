@@ -13,6 +13,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -74,12 +75,12 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      *
      * @param id  The task identifier.
      * @param dto The task data.
-     * @return The created task.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws DuplicateKeyException If a task with the specified identifier already exists.
      */
     @Override
     @Transactional
-    public T create(long id, ModifyTaskDto<S> dto) {
+    public Serializable create(long id, ModifyTaskDto<S> dto) {
         if (this.repository.existsById(id))
             throw new DuplicateKeyException("Task " + id + " already exists.");
 
@@ -94,7 +95,7 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
         task = this.repository.save(task);
         this.afterCreate(task);
 
-        return task;
+        return this.mapToReturnData(task, true);
     }
 
     /**
@@ -102,11 +103,12 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      *
      * @param id  The task identifier.
      * @param dto The new task data.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws EntityNotFoundException If the task does not exist.
      */
     @Override
     @Transactional
-    public void update(long id, ModifyTaskDto<S> dto) {
+    public Serializable update(long id, ModifyTaskDto<S> dto) {
         var task = this.repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Task " + id + " does not exist."));
 
         LOG.info("Updating task {}", id);
@@ -117,6 +119,8 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
 
         task = this.repository.save(task);
         this.afterUpdate(task);
+
+        return this.mapToReturnData(task, false);
     }
 
     /**
@@ -153,6 +157,17 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      * @param dto  The new task data.
      */
     protected abstract void updateTask(T task, ModifyTaskDto<S> dto);
+
+    /**
+     * Maps the task to the data that should be returned to the task administration UI.
+     *
+     * @param task   The task.
+     * @param create {@code true}, if the specified task was just created; {@code false} if the task was updated.
+     * @return The data to send (might be {@code null}).
+     */
+    protected Serializable mapToReturnData(T task, boolean create) {
+        return null;
+    }
 
     /**
      * Called before the task is stored in the database.
