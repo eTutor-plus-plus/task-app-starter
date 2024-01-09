@@ -62,7 +62,7 @@ class TaskServiceTest {
         var dto = new ModifyTaskDto<>(groupId, maxPoints, "test", taskStatus, new AdditionalData(someData));
         when(service.getRepository().existsById(id)).thenReturn(false);
         when(service.getTaskGroupRepository().getReferenceById(groupId)).thenReturn(new TaskGroupEntity(groupId));
-        when(service.getRepository().save(new TaskEntity(id))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(service.getRepository().save(any())).thenAnswer(invocation -> new PersistedEntity(invocation.getArgument(0)));
 
         // Act
         var result = service.create(id, dto);
@@ -73,6 +73,8 @@ class TaskServiceTest {
         assertEquals(someData, result.getSomeData());
         assertEquals(maxPoints, result.getMaxPoints());
         assertEquals(groupId, result.getTaskGroup().getId());
+        assertFalse(service.beforeCreateCalled instanceof PersistedEntity);
+        assertInstanceOf(PersistedEntity.class, service.afterCreateCalled);
     }
 
     @Test
@@ -100,7 +102,7 @@ class TaskServiceTest {
         var entity = new TaskEntity(id, TaskStatus.DRAFT, new TaskGroupEntity(1L), "old data", BigDecimal.TWO);
         when(service.getRepository().findById(id)).thenReturn(Optional.of(entity));
         when(service.getTaskGroupRepository().getReferenceById(2L)).thenReturn(new TaskGroupEntity(2L));
-        when(service.getRepository().save(new TaskEntity(id))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(service.getRepository().save(any())).thenAnswer(invocation -> new PersistedEntity(invocation.getArgument(0)));
 
         // Act
         service.update(id, dto);
@@ -110,6 +112,7 @@ class TaskServiceTest {
         assertEquals(dto.maxPoints(), entity.getMaxPoints());
         assertEquals(dto.taskGroupId(), entity.getTaskGroup().getId());
         assertEquals(dto.additionalData().someData(), entity.getSomeData());
+        assertInstanceOf(PersistedEntity.class, service.afterUpdateCalled);
     }
 
     @Test
@@ -138,6 +141,8 @@ class TaskServiceTest {
 
         // Assert
         verify(service.getRepository(), times(1)).deleteById(id);
+        assertEquals(id, service.beforeDeleteCalled);
+        assertEquals(id, service.afterDeleteCalled);
     }
 
     @Test
@@ -157,6 +162,12 @@ class TaskServiceTest {
     // TODO: test authorities
 
     private static class TaskServiceImpl extends BaseTaskService<TaskEntity, TaskGroupEntity, AdditionalData> {
+
+        private TaskEntity beforeCreateCalled;
+        private TaskEntity afterCreateCalled;
+        private TaskEntity afterUpdateCalled;
+        private long beforeDeleteCalled = -1;
+        private long afterDeleteCalled = -1;
 
         public TaskServiceImpl() {
             //noinspection unchecked
@@ -182,6 +193,31 @@ class TaskServiceTest {
         protected void updateTask(TaskEntity Task, ModifyTaskDto<AdditionalData> dto) {
             Task.setSomeData(dto.additionalData().someData());
         }
+
+        @Override
+        protected void beforeCreate(TaskEntity task) {
+            this.beforeCreateCalled = task;
+        }
+
+        @Override
+        protected void afterCreate(TaskEntity task) {
+            this.afterCreateCalled = task;
+        }
+
+        @Override
+        protected void afterUpdate(TaskEntity task) {
+            this.afterUpdateCalled = task;
+        }
+
+        @Override
+        protected void beforeDelete(long id) {
+            this.beforeDeleteCalled = id;
+        }
+
+        @Override
+        protected void afterDelete(long id) {
+            this.afterDeleteCalled = id;
+        }
     }
 
     private static class TaskEntity extends BaseTask<TaskGroupEntity> {
@@ -205,6 +241,12 @@ class TaskServiceTest {
 
         public void setSomeData(String someData) {
             this.someData = someData;
+        }
+    }
+
+    private static class PersistedEntity extends TaskEntity {
+        public PersistedEntity(TaskEntity te) {
+            super(te.getId(), te.getStatus(), te.getTaskGroup(), te.getSomeData(), te.getMaxPoints());
         }
     }
 

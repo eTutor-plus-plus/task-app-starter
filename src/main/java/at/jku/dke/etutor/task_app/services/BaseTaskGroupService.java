@@ -78,7 +78,9 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
         taskGroup.setId(id);
         taskGroup.setStatus(dto.status());
 
+        this.beforeCreate(taskGroup);
         taskGroup = this.repository.save(taskGroup);
+        this.afterCreate(taskGroup);
 
         return taskGroup;
     }
@@ -99,7 +101,8 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
         taskGroup.setStatus(dto.status());
         this.updateTaskGroup(taskGroup, dto);
 
-        this.repository.save(taskGroup);
+        taskGroup = this.repository.save(taskGroup);
+        this.afterUpdate(taskGroup);
     }
 
     /**
@@ -111,7 +114,9 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
     @Transactional
     public void delete(long id) {
         LOG.info("Deleting task {}", id);
+        this.beforeDelete(id);
         this.repository.deleteById(id);
+        this.afterDelete(id);
     }
 
     //#endregion
@@ -134,4 +139,50 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      * @param dto       The new task group data.
      */
     protected abstract void updateTaskGroup(G taskGroup, ModifyTaskGroupDto<S> dto);
+
+    /**
+     * Called before the task group is stored in the database.
+     *
+     * @param taskGroup The task group to create.
+     */
+    protected void beforeCreate(G taskGroup) {
+    }
+
+    /**
+     * Called after the task group is stored in the database.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param taskGroup The created task group.
+     */
+    protected void afterCreate(G taskGroup) {
+    }
+
+    /**
+     * Called after the task group is updated in the database.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param taskGroup The updated taskGroup.
+     */
+    protected void afterUpdate(G taskGroup) {
+    }
+
+    /**
+     * Called before the task group with the specified identifier is deleted.
+     *
+     * @param id The identifier of the task group to delete.
+     */
+    protected void beforeDelete(long id) {
+    }
+
+    /**
+     * Called after the task group with the specified identifier is deleted.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param id The identifier of the deleted task group.
+     */
+    protected void afterDelete(long id) {
+    }
 }

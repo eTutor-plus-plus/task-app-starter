@@ -90,7 +90,9 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
         task.setMaxPoints(dto.maxPoints());
         task.setTaskGroup(this.taskGroupRepository.getReferenceById(dto.taskGroupId()));
 
+        this.beforeCreate(task);
         task = this.repository.save(task);
+        this.afterCreate(task);
 
         return task;
     }
@@ -113,7 +115,8 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
         task.setTaskGroup(this.taskGroupRepository.getReferenceById(dto.taskGroupId()));
         this.updateTask(task, dto);
 
-        this.repository.save(task);
+        task = this.repository.save(task);
+        this.afterUpdate(task);
     }
 
     /**
@@ -125,7 +128,9 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
     @Transactional
     public void delete(long id) {
         LOG.info("Deleting task {}", id);
+        this.beforeDelete(id);
         this.repository.deleteById(id);
+        this.afterDelete(id);
     }
 
     //#endregion
@@ -148,4 +153,50 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      * @param dto  The new task data.
      */
     protected abstract void updateTask(T task, ModifyTaskDto<S> dto);
+
+    /**
+     * Called before the task is stored in the database.
+     *
+     * @param task The task to create.
+     */
+    protected void beforeCreate(T task) {
+    }
+
+    /**
+     * Called after the task is stored in the database.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param task The created task.
+     */
+    protected void afterCreate(T task) {
+    }
+
+    /**
+     * Called after the task is updated in the database.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param task The updated task.
+     */
+    protected void afterUpdate(T task) {
+    }
+
+    /**
+     * Called before the task with the specified identifier is deleted.
+     *
+     * @param id The identifier of the task to delete.
+     */
+    protected void beforeDelete(long id) {
+    }
+
+    /**
+     * Called after the task with the specified identifier is deleted.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param id The identifier of the deleted task.
+     */
+    protected void afterDelete(long id) {
+    }
 }
