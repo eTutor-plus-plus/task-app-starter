@@ -1,5 +1,6 @@
 package at.jku.dke.etutor.task_app.controllers;
 
+import at.jku.dke.etutor.task_app.auth.AuthConstants;
 import at.jku.dke.etutor.task_app.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -52,7 +53,7 @@ public interface SubmissionController<T> {
     @Operation(
         summary = "Execute and grade submission",
         description = "Executes and grades a submission. If <code>runInBackground</code> is <code>true</code>, only the submission identifier will be returned; otherwise the evaluation result will be returned. Requires the SUBMIT role.",
-        security = @SecurityRequirement(name = "api-key"))
+        security = @SecurityRequirement(name = AuthConstants.API_KEY_REQUIREMENT))
     ResponseEntity<Serializable> submit(@RequestBody SubmitSubmissionDto<T> submission,
                                         @Parameter(description = "Whether to run the grading in background or wait for grading to finish.") @RequestParam(required = false, defaultValue = "false") boolean runInBackground,
                                         @Parameter(description = "Whether to persist the submission. Only applies if <code>runInBackground</code> is <code>false</code>.") @RequestParam(required = false, defaultValue = "true") boolean persist);
@@ -77,7 +78,7 @@ public interface SubmissionController<T> {
     @Operation(
         summary = "Get evaluation result",
         description = "Returns the evaluation result for the requested submission. Waits for the specified timeout for the result to be available. Requires the SUBMIT role.",
-        security = @SecurityRequirement(name = "api-key"))
+        security = @SecurityRequirement(name = AuthConstants.API_KEY_REQUIREMENT))
     ResponseEntity<GradingDto> getResult(@Parameter(description = "The submission identifier.") @PathVariable UUID id,
                                          @Parameter(description = "The maximum amount of seconds to wait for the result.") @RequestHeader(value = "X-API-TIMEOUT", required = false, defaultValue = "10") int timeout,
                                          @Parameter(description = "Whether to delete the submission after retrieval.") @RequestParam(required = false, defaultValue = "false") boolean delete);
@@ -102,7 +103,7 @@ public interface SubmissionController<T> {
     @Operation(
         summary = "Get submissions",
         description = "Returns a paged and filtered list of submissions. Requires the READ_SUBMISSION role.",
-        security = @SecurityRequirement(name = "api-key"))
+        security = @SecurityRequirement(name = AuthConstants.API_KEY_REQUIREMENT))
     ResponseEntity<Page<SubmissionDto<T>>> getSubmissions(@ParameterObject Pageable page,
                                                           @Parameter(description = "User filter string (applies equals to userId.") @RequestParam(required = false) String userFilter,
                                                           @Parameter(description = "Task filter string (applies equals to taskId.") @RequestParam(required = false) Long taskFilter,

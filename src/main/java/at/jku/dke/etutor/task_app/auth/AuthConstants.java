@@ -8,6 +8,11 @@ public final class AuthConstants {
     }
 
     /**
+     * The name of the API KEY requirement in the OpenAPI docs.
+     */
+    public static final String API_KEY_REQUIREMENT = "api-key";
+
+    /**
      * The header name of the authentication token.
      */
     public static final String AUTH_TOKEN_HEADER_NAME = "X-API-KEY";
