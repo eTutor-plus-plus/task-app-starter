@@ -3,6 +3,7 @@ package at.jku.dke.etutor.task_app.controllers;
 import at.jku.dke.etutor.task_app.data.entities.BaseTask;
 import at.jku.dke.etutor.task_app.data.entities.BaseTaskGroup;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
+import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
 import at.jku.dke.etutor.task_app.dto.TaskStatus;
 import at.jku.dke.etutor.task_app.services.BaseTaskService;
 import at.jku.dke.etutor.task_app.services.TaskService;
@@ -53,7 +54,7 @@ class BaseTaskControllerTest {
         var controller = new TaskController();
         final long id = 2L;
         var dto = new ModifyTaskDto<>(2L, BigDecimal.TEN, "test", TaskStatus.APPROVED, new AdditionalData("data"));
-        when(controller.getTaskService().create(id, dto)).thenReturn(new TestTask(id, "test"));
+        when(controller.getTaskService().create(id, dto)).thenReturn(new TaskModificationResponseDto(null, null, null, null));
 
         // Act
         var result = controller.create(id, dto);
@@ -76,7 +77,7 @@ class BaseTaskControllerTest {
         var result = controller.update(id, dto);
 
         // Assert
-        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNull(result.getBody());
     }
 
@@ -86,7 +87,7 @@ class BaseTaskControllerTest {
         var controller = new TaskController();
         final long id = 2L;
         var dto = new ModifyTaskDto<>(2L, BigDecimal.TEN, "test", TaskStatus.APPROVED, new AdditionalData("data"));
-        when(controller.getTaskService().update(id, dto)).thenReturn(id);
+        when(controller.getTaskService().update(id, dto)).thenReturn(new TaskModificationResponseDto(null, null, null, null));
 
         // Act
         var result = controller.update(id, dto);

@@ -60,12 +60,10 @@ class TaskGroupServiceTest {
         when(service.getRepository().save(any())).thenAnswer(invocation -> new PersistedEntity(invocation.getArgument(0)));
 
         // Act
-        var result = (TaskGroupEntity)service.create(id, dto);
+        var result = service.create(id, dto);
 
         // Assert
-        assertEquals(id, result.getId());
-        assertEquals(taskStatus, result.getStatus());
-        assertEquals(someData, result.getSomeData());
+        assertNotNull(result);
         assertFalse(service.beforeCreateCalled instanceof PersistedEntity);
         assertInstanceOf(PersistedEntity.class, service.afterCreateCalled);
     }
@@ -97,11 +95,10 @@ class TaskGroupServiceTest {
         when(service.getRepository().save(any())).thenAnswer(invocation -> new PersistedEntity(invocation.getArgument(0)));
 
         // Act
-        var taskGroupEntity = service.update(id, dto);
+        var result = service.update(id, dto);
 
         // Assert
-        assertNotNull(taskGroupEntity);
-        assertInstanceOf(PersistedEntity.class, taskGroupEntity);
+        assertNotNull(result);
         assertEquals(dto.status(), entity.getStatus());
         assertEquals(dto.additionalData().someData(), entity.getSomeData());
         assertInstanceOf(PersistedEntity.class, service.afterUpdateCalled);
@@ -180,11 +177,6 @@ class TaskGroupServiceTest {
         @Override
         protected void updateTaskGroup(TaskGroupEntity taskGroup, ModifyTaskGroupDto<AdditionalData> dto) {
             taskGroup.setSomeData(dto.additionalData().someData());
-        }
-
-        @Override
-        protected Serializable mapToReturnData(TaskGroupEntity taskGroup, boolean create) {
-            return taskGroup;
         }
 
         @Override

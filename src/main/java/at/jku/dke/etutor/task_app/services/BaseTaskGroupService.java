@@ -4,6 +4,7 @@ import at.jku.dke.etutor.task_app.auth.AuthConstants;
 import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.data.repositories.TaskGroupRepository;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskGroupDto;
+import at.jku.dke.etutor.task_app.dto.TaskGroupModificationResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -12,7 +13,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -71,7 +71,7 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      */
     @Override
     @Transactional
-    public Serializable create(long id, @Valid ModifyTaskGroupDto<S> dto) {
+    public TaskGroupModificationResponseDto create(long id, @Valid ModifyTaskGroupDto<S> dto) {
         if (this.repository.existsById(id))
             throw new DuplicateKeyException("Task group " + id + " already exists.");
 
@@ -97,7 +97,7 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      */
     @Override
     @Transactional
-    public Serializable update(long id, @Valid ModifyTaskGroupDto<S> dto) {
+    public TaskGroupModificationResponseDto update(long id, @Valid ModifyTaskGroupDto<S> dto) {
         var taskGroup = this.repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Task group " + id + " does not exist."));
 
         LOG.info("Updating task group {}", id);
@@ -150,10 +150,10 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      *
      * @param taskGroup The task group.
      * @param create    {@code true}, if the specified task group was just created; {@code false} if the task group was updated.
-     * @return The data to send (might be {@code null}).
+     * @return The data to send.
      */
-    protected Serializable mapToReturnData(G taskGroup, boolean create) {
-        return null;
+    protected TaskGroupModificationResponseDto mapToReturnData(G taskGroup, boolean create) {
+        return new TaskGroupModificationResponseDto(null, null);
     }
 
     /**

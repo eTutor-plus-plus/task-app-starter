@@ -2,11 +2,11 @@ package at.jku.dke.etutor.task_app.controllers;
 
 import at.jku.dke.etutor.task_app.data.entities.Task;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
+import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
 import at.jku.dke.etutor.task_app.services.TaskService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.Optional;
 
@@ -51,8 +51,8 @@ public abstract class BaseTaskController<E extends Task<?>, D, A> implements Tas
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<Serializable> create(long id, ModifyTaskDto<A> dto) {
-        Serializable created = this.taskService.create(id, dto);
+    public ResponseEntity<TaskModificationResponseDto> create(long id, ModifyTaskDto<A> dto) {
+        TaskModificationResponseDto created = this.taskService.create(id, dto);
         return ResponseEntity
             .created(URI.create("/api/task/" + id))
             .body(created);
@@ -62,9 +62,9 @@ public abstract class BaseTaskController<E extends Task<?>, D, A> implements Tas
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<Serializable> update(long id, ModifyTaskDto<A> dto) {
-        Serializable updated = this.taskService.update(id, dto);
-        return updated == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(updated);
+    public ResponseEntity<TaskModificationResponseDto> update(long id, ModifyTaskDto<A> dto) {
+        TaskModificationResponseDto updated = this.taskService.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     /**

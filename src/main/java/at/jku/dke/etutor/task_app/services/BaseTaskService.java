@@ -6,6 +6,7 @@ import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.data.repositories.TaskGroupRepository;
 import at.jku.dke.etutor.task_app.data.repositories.TaskRepository;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
+import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -14,7 +15,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -81,7 +81,7 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      */
     @Override
     @Transactional
-    public Serializable create(long id, @Valid ModifyTaskDto<S> dto) {
+    public TaskModificationResponseDto create(long id, @Valid ModifyTaskDto<S> dto) {
         if (this.repository.existsById(id))
             throw new DuplicateKeyException("Task " + id + " already exists.");
 
@@ -109,7 +109,7 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      */
     @Override
     @Transactional
-    public Serializable update(long id, @Valid ModifyTaskDto<S> dto) {
+    public TaskModificationResponseDto update(long id, @Valid ModifyTaskDto<S> dto) {
         var task = this.repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Task " + id + " does not exist."));
 
         LOG.info("Updating task {}", id);
@@ -164,10 +164,10 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      *
      * @param task   The task.
      * @param create {@code true}, if the specified task was just created; {@code false} if the task was updated.
-     * @return The data to send (might be {@code null}).
+     * @return The data to send.
      */
-    protected Serializable mapToReturnData(T task, boolean create) {
-        return null;
+    protected TaskModificationResponseDto mapToReturnData(T task, boolean create) {
+        return new TaskModificationResponseDto(null, null, null, null);
     }
 
     /**

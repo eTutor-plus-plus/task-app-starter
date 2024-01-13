@@ -2,12 +2,12 @@ package at.jku.dke.etutor.task_app.services;
 
 import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskGroupDto;
+import at.jku.dke.etutor.task_app.dto.TaskGroupModificationResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.annotation.Validated;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -34,7 +34,7 @@ public interface TaskGroupService<G extends TaskGroup, S> {
      * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws DuplicateKeyException If a task group with the specified identifier already exists.
      */
-    Serializable create(long id, @Valid ModifyTaskGroupDto<S> dto);
+    TaskGroupModificationResponseDto create(long id, @Valid ModifyTaskGroupDto<S> dto);
 
     /**
      * Updates an existing task group.
@@ -44,7 +44,7 @@ public interface TaskGroupService<G extends TaskGroup, S> {
      * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws EntityNotFoundException If the task group does not exist.
      */
-    Serializable update(long id, @Valid ModifyTaskGroupDto<S> dto);
+    TaskGroupModificationResponseDto update(long id, @Valid ModifyTaskGroupDto<S> dto);
 
     /**
      * Deletes the task group with the specified identifier.
