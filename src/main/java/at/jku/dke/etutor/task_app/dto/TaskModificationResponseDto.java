@@ -1,5 +1,10 @@
 package at.jku.dke.etutor.task_app.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 /**
@@ -11,10 +16,10 @@ import java.math.BigDecimal;
  * @param maxPoints     The maximum points to set (might be {@code null}).
  */
 public record TaskModificationResponseDto(
-    String descriptionDe,
-    String descriptionEn,
-    Short difficulty,
-    BigDecimal maxPoints) {
+    @Schema(description = "The german description.", example = "Geben Sie eine Zahl ein.") String descriptionDe,
+    @Schema(description = "The english description.", example = "Enter a number.") String descriptionEn,
+    @Schema(description = "The difficulty to set.", example = "2", examples = {"2", "0"}) @Min(0) @Max(3) Short difficulty,
+    @Schema(description = "The maximum points to set.", example = "25.75", examples = {"25.75", "100"}) @Positive BigDecimal maxPoints) {
 
     /**
      * Creates a new instance of class {@link TaskGroupModificationResponseDto}.
