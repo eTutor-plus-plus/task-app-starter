@@ -2,6 +2,7 @@ package at.jku.dke.etutor.task_app.controllers;
 
 import at.jku.dke.etutor.task_app.data.entities.Task;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
+import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
 import at.jku.dke.etutor.task_app.services.TaskService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -50,20 +51,20 @@ public abstract class BaseTaskController<E extends Task<?>, D, A> implements Tas
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<D> create(long id, ModifyTaskDto<A> dto) {
-        E created = this.taskService.create(id, dto);
+    public ResponseEntity<TaskModificationResponseDto> create(long id, ModifyTaskDto<A> dto) {
+        TaskModificationResponseDto created = this.taskService.create(id, dto);
         return ResponseEntity
             .created(URI.create("/api/task/" + id))
-            .body(this.mapToDto(created));
+            .body(created);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<Void> update(long id, ModifyTaskDto<A> dto) {
-        this.taskService.update(id, dto);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<TaskModificationResponseDto> update(long id, ModifyTaskDto<A> dto) {
+        TaskModificationResponseDto updated = this.taskService.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     /**

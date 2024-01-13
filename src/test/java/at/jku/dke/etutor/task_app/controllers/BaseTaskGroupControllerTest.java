@@ -2,6 +2,7 @@ package at.jku.dke.etutor.task_app.controllers;
 
 import at.jku.dke.etutor.task_app.data.entities.BaseTaskGroup;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskGroupDto;
+import at.jku.dke.etutor.task_app.dto.TaskGroupModificationResponseDto;
 import at.jku.dke.etutor.task_app.dto.TaskStatus;
 import at.jku.dke.etutor.task_app.services.BaseTaskGroupService;
 import at.jku.dke.etutor.task_app.services.TaskGroupService;
@@ -9,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,14 +52,14 @@ class BaseTaskGroupControllerTest {
         var controller = new TaskGroupController();
         final long id = 2L;
         var dto = new ModifyTaskGroupDto<>("test", TaskStatus.APPROVED, new AdditionalData("data"));
-        when(controller.getTaskGroupService().create(id, dto)).thenReturn(new TestTaskGroup(id, "test"));
+        when(controller.getTaskGroupService().create(id, dto)).thenReturn(new TaskGroupModificationResponseDto(null, null));
 
         // Act
         var result = controller.create(id, dto);
 
         // Assert
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertEquals(new TaskGroupDto("test"), result.getBody());
+        assertNotNull(result.getBody());
         assertNotNull(result.getHeaders().getLocation());
         assertEquals("/api/taskGroup/2", result.getHeaders().getLocation().toString());
     }
@@ -73,8 +75,24 @@ class BaseTaskGroupControllerTest {
         var result = controller.update(id, dto);
 
         // Assert
-        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNull(result.getBody());
+    }
+
+    @Test
+    void updateReturnsValue() {
+        // Arrange
+        var controller = new TaskGroupController();
+        final long id = 2L;
+        var dto = new ModifyTaskGroupDto<>("test", TaskStatus.APPROVED, new AdditionalData("data"));
+        when(controller.getTaskGroupService().update(id, dto)).thenReturn(new TaskGroupModificationResponseDto(null, null));
+
+        // Act
+        var result = controller.update(id, dto);
+
+        // Assert
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertNotNull(result.getBody());
     }
 
     @Test
@@ -110,7 +128,7 @@ class BaseTaskGroupControllerTest {
     private record TaskGroupDto(String data) {
     }
 
-    private static class TestTaskGroup extends BaseTaskGroup {
+    private static class TestTaskGroup extends BaseTaskGroup implements Serializable {
         private String data;
 
         public TestTaskGroup(Long id) {

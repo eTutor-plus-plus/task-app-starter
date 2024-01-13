@@ -4,7 +4,9 @@ import at.jku.dke.etutor.task_app.auth.AuthConstants;
 import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.data.repositories.TaskGroupRepository;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskGroupDto;
+import at.jku.dke.etutor.task_app.dto.TaskGroupModificationResponseDto;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -64,12 +66,12 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      *
      * @param id  The task group identifier.
      * @param dto The task group data.
-     * @return The created task group.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws DuplicateKeyException If a task group with the specified identifier already exists.
      */
     @Override
     @Transactional
-    public G create(long id, ModifyTaskGroupDto<S> dto) {
+    public TaskGroupModificationResponseDto create(long id, @Valid ModifyTaskGroupDto<S> dto) {
         if (this.repository.existsById(id))
             throw new DuplicateKeyException("Task group " + id + " already exists.");
 
@@ -78,9 +80,11 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
         taskGroup.setId(id);
         taskGroup.setStatus(dto.status());
 
+        this.beforeCreate(taskGroup);
         taskGroup = this.repository.save(taskGroup);
+        this.afterCreate(taskGroup);
 
-        return taskGroup;
+        return this.mapToReturnData(taskGroup, true);
     }
 
     /**
@@ -88,18 +92,22 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      *
      * @param id  The task group identifier.
      * @param dto The new task group data.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws EntityNotFoundException If the task group does not exist.
      */
     @Override
     @Transactional
-    public void update(long id, ModifyTaskGroupDto<S> dto) {
+    public TaskGroupModificationResponseDto update(long id, @Valid ModifyTaskGroupDto<S> dto) {
         var taskGroup = this.repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Task group " + id + " does not exist."));
 
         LOG.info("Updating task group {}", id);
         taskGroup.setStatus(dto.status());
         this.updateTaskGroup(taskGroup, dto);
 
-        this.repository.save(taskGroup);
+        taskGroup = this.repository.save(taskGroup);
+        this.afterUpdate(taskGroup);
+
+        return this.mapToReturnData(taskGroup, false);
     }
 
     /**
@@ -111,7 +119,9 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
     @Transactional
     public void delete(long id) {
         LOG.info("Deleting task {}", id);
+        this.beforeDelete(id);
         this.repository.deleteById(id);
+        this.afterDelete(id);
     }
 
     //#endregion
@@ -134,4 +144,61 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      * @param dto       The new task group data.
      */
     protected abstract void updateTaskGroup(G taskGroup, ModifyTaskGroupDto<S> dto);
+
+    /**
+     * Maps the task group to the data that should be returned to the task administration UI.
+     *
+     * @param taskGroup The task group.
+     * @param create    {@code true}, if the specified task group was just created; {@code false} if the task group was updated.
+     * @return The data to send.
+     */
+    protected TaskGroupModificationResponseDto mapToReturnData(G taskGroup, boolean create) {
+        return new TaskGroupModificationResponseDto(null, null);
+    }
+
+    /**
+     * Called before the task group is stored in the database.
+     *
+     * @param taskGroup The task group to create.
+     */
+    protected void beforeCreate(G taskGroup) {
+    }
+
+    /**
+     * Called after the task group is stored in the database.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param taskGroup The created task group.
+     */
+    protected void afterCreate(G taskGroup) {
+    }
+
+    /**
+     * Called after the task group is updated in the database.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param taskGroup The updated taskGroup.
+     */
+    protected void afterUpdate(G taskGroup) {
+    }
+
+    /**
+     * Called before the task group with the specified identifier is deleted.
+     *
+     * @param id The identifier of the task group to delete.
+     */
+    protected void beforeDelete(long id) {
+    }
+
+    /**
+     * Called after the task group with the specified identifier is deleted.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param id The identifier of the deleted task group.
+     */
+    protected void afterDelete(long id) {
+    }
 }

@@ -46,7 +46,7 @@ class BaseSubmissionControllerTest {
         // Arrange
         SubmissionController controller = new SubmissionController();
         when(controller.getSubmissionService().execute(any(), booleanThat(persist -> !persist)))
-            .thenReturn(new BaseSubmissionService.GradingResult(null, new GradingDto(BigDecimal.TWO, BigDecimal.ZERO, "bad", Collections.emptyList())));
+            .thenReturn(new GradingResultDto(null, new GradingDto(BigDecimal.TWO, BigDecimal.ZERO, "bad", Collections.emptyList())));
 
         // Act
         var result = controller.submit(new SubmitSubmissionDto<>("user", "assignment", 1L, "en", SubmissionMode.SUBMIT, 1, "juhu"),
@@ -55,7 +55,7 @@ class BaseSubmissionControllerTest {
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
-        assertEquals(SubmissionService.GradingResult.class, result.getBody().getClass());
+        assertEquals(GradingResultDto.class, result.getBody().getClass());
     }
 
     @Test
@@ -63,7 +63,7 @@ class BaseSubmissionControllerTest {
         // Arrange
         SubmissionController controller = new SubmissionController();
         when(controller.getSubmissionService().execute(any(), booleanThat(persist -> persist)))
-            .thenReturn(new BaseSubmissionService.GradingResult(UUID.randomUUID(), new GradingDto(BigDecimal.TWO, BigDecimal.ZERO, "bad", Collections.emptyList())));
+            .thenReturn(new GradingResultDto(UUID.randomUUID(), new GradingDto(BigDecimal.TWO, BigDecimal.ZERO, "bad", Collections.emptyList())));
 
         // Act
         var result = controller.submit(new SubmitSubmissionDto<>("user", "assignment", 1L, "en", SubmissionMode.SUBMIT, 1, "juhu"),
@@ -72,7 +72,7 @@ class BaseSubmissionControllerTest {
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
-        assertEquals(SubmissionService.GradingResult.class, result.getBody().getClass());
+        assertEquals(GradingResultDto.class, result.getBody().getClass());
     }
 
     @Test

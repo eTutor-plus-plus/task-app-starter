@@ -3,8 +3,11 @@ package at.jku.dke.etutor.task_app.services;
 import at.jku.dke.etutor.task_app.data.entities.Task;
 import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
+import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
@@ -15,6 +18,7 @@ import java.util.Optional;
  * @param <G> The task group type.
  * @param <S> The type of the additional data used in {@link ModifyTaskDto}.
  */
+@Validated
 public interface TaskService<T extends Task<G>, G extends TaskGroup, S> {
     /**
      * Returns the task with the specified identifier.
@@ -29,19 +33,20 @@ public interface TaskService<T extends Task<G>, G extends TaskGroup, S> {
      *
      * @param id  The task identifier.
      * @param dto The task data.
-     * @return The created task.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws DuplicateKeyException If a task with the specified identifier already exists.
      */
-    T create(long id, ModifyTaskDto<S> dto);
+    TaskModificationResponseDto create(long id, @Valid ModifyTaskDto<S> dto);
 
     /**
      * Updates an existing task.
      *
      * @param id  The task identifier.
      * @param dto The new task data.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws EntityNotFoundException If the task does not exist.
      */
-    void update(long id, ModifyTaskDto<S> dto);
+    TaskModificationResponseDto update(long id, @Valid ModifyTaskDto<S> dto);
 
     /**
      * Deletes the task with the specified identifier.

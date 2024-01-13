@@ -3,6 +3,7 @@ package at.jku.dke.etutor.task_app.controllers;
 import at.jku.dke.etutor.task_app.data.entities.BaseTask;
 import at.jku.dke.etutor.task_app.data.entities.BaseTaskGroup;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
+import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
 import at.jku.dke.etutor.task_app.dto.TaskStatus;
 import at.jku.dke.etutor.task_app.services.BaseTaskService;
 import at.jku.dke.etutor.task_app.services.TaskService;
@@ -10,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -52,14 +54,14 @@ class BaseTaskControllerTest {
         var controller = new TaskController();
         final long id = 2L;
         var dto = new ModifyTaskDto<>(2L, BigDecimal.TEN, "test", TaskStatus.APPROVED, new AdditionalData("data"));
-        when(controller.getTaskService().create(id, dto)).thenReturn(new TestTask(id, "test"));
+        when(controller.getTaskService().create(id, dto)).thenReturn(new TaskModificationResponseDto(null, null, null, null));
 
         // Act
         var result = controller.create(id, dto);
 
         // Assert
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertEquals(new TaskDto("test"), result.getBody());
+        assertNotNull(result.getBody());
         assertNotNull(result.getHeaders().getLocation());
         assertEquals("/api/task/2", result.getHeaders().getLocation().toString());
     }
@@ -75,8 +77,24 @@ class BaseTaskControllerTest {
         var result = controller.update(id, dto);
 
         // Assert
-        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNull(result.getBody());
+    }
+
+    @Test
+    void updateReturnsValue() {
+        // Arrange
+        var controller = new TaskController();
+        final long id = 2L;
+        var dto = new ModifyTaskDto<>(2L, BigDecimal.TEN, "test", TaskStatus.APPROVED, new AdditionalData("data"));
+        when(controller.getTaskService().update(id, dto)).thenReturn(new TaskModificationResponseDto(null, null, null, null));
+
+        // Act
+        var result = controller.update(id, dto);
+
+        // Assert
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertNotNull(result.getBody());
     }
 
     @Test
@@ -112,7 +130,7 @@ class BaseTaskControllerTest {
     private record TaskDto(String data) {
     }
 
-    private static class TestTask extends BaseTask<TestTaskGroup> {
+    private static class TestTask extends BaseTask<TestTaskGroup> implements Serializable {
         private String data;
 
         public TestTask(Long id) {
@@ -129,7 +147,7 @@ class BaseTaskControllerTest {
         }
     }
 
-    private static class TestTaskGroup extends BaseTaskGroup {
+    private static class TestTaskGroup extends BaseTaskGroup implements Serializable {
         public TestTaskGroup(Long id) {
             super(id, TaskStatus.APPROVED);
         }

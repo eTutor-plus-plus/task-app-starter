@@ -6,7 +6,9 @@ import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.data.repositories.TaskGroupRepository;
 import at.jku.dke.etutor.task_app.data.repositories.TaskRepository;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
+import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -74,12 +76,12 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      *
      * @param id  The task identifier.
      * @param dto The task data.
-     * @return The created task.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws DuplicateKeyException If a task with the specified identifier already exists.
      */
     @Override
     @Transactional
-    public T create(long id, ModifyTaskDto<S> dto) {
+    public TaskModificationResponseDto create(long id, @Valid ModifyTaskDto<S> dto) {
         if (this.repository.existsById(id))
             throw new DuplicateKeyException("Task " + id + " already exists.");
 
@@ -90,9 +92,11 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
         task.setMaxPoints(dto.maxPoints());
         task.setTaskGroup(this.taskGroupRepository.getReferenceById(dto.taskGroupId()));
 
+        this.beforeCreate(task);
         task = this.repository.save(task);
+        this.afterCreate(task);
 
-        return task;
+        return this.mapToReturnData(task, true);
     }
 
     /**
@@ -100,11 +104,12 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      *
      * @param id  The task identifier.
      * @param dto The new task data.
+     * @return The data that should be sent to the task administration UI (might be {@code null}).
      * @throws EntityNotFoundException If the task does not exist.
      */
     @Override
     @Transactional
-    public void update(long id, ModifyTaskDto<S> dto) {
+    public TaskModificationResponseDto update(long id, @Valid ModifyTaskDto<S> dto) {
         var task = this.repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Task " + id + " does not exist."));
 
         LOG.info("Updating task {}", id);
@@ -113,7 +118,10 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
         task.setTaskGroup(this.taskGroupRepository.getReferenceById(dto.taskGroupId()));
         this.updateTask(task, dto);
 
-        this.repository.save(task);
+        task = this.repository.save(task);
+        this.afterUpdate(task);
+
+        return this.mapToReturnData(task, false);
     }
 
     /**
@@ -125,7 +133,9 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
     @Transactional
     public void delete(long id) {
         LOG.info("Deleting task {}", id);
+        this.beforeDelete(id);
         this.repository.deleteById(id);
+        this.afterDelete(id);
     }
 
     //#endregion
@@ -148,4 +158,61 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      * @param dto  The new task data.
      */
     protected abstract void updateTask(T task, ModifyTaskDto<S> dto);
+
+    /**
+     * Maps the task to the data that should be returned to the task administration UI.
+     *
+     * @param task   The task.
+     * @param create {@code true}, if the specified task was just created; {@code false} if the task was updated.
+     * @return The data to send.
+     */
+    protected TaskModificationResponseDto mapToReturnData(T task, boolean create) {
+        return new TaskModificationResponseDto(null, null, null, null);
+    }
+
+    /**
+     * Called before the task is stored in the database.
+     *
+     * @param task The task to create.
+     */
+    protected void beforeCreate(T task) {
+    }
+
+    /**
+     * Called after the task is stored in the database.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param task The created task.
+     */
+    protected void afterCreate(T task) {
+    }
+
+    /**
+     * Called after the task is updated in the database.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param task The updated task.
+     */
+    protected void afterUpdate(T task) {
+    }
+
+    /**
+     * Called before the task with the specified identifier is deleted.
+     *
+     * @param id The identifier of the task to delete.
+     */
+    protected void beforeDelete(long id) {
+    }
+
+    /**
+     * Called after the task with the specified identifier is deleted.
+     * <p>
+     * This method runs in the same transaction as the calling method.
+     *
+     * @param id The identifier of the deleted task.
+     */
+    protected void afterDelete(long id) {
+    }
 }

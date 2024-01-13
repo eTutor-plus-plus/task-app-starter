@@ -11,10 +11,3 @@ body:
       placeholder: Tell us what you want to know!
     validations:
       required: true
-  - type: checkboxes
-    id: search
-    attributes:
-      label: Search
-      options:
-        - label: I have used the search function to check whether someone else has already asked the same question.
-          required: true

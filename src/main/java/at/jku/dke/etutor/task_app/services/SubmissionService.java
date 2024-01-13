@@ -1,14 +1,12 @@
 package at.jku.dke.etutor.task_app.services;
 
 import at.jku.dke.etutor.task_app.data.entities.Submission;
-import at.jku.dke.etutor.task_app.dto.GradingDto;
-import at.jku.dke.etutor.task_app.dto.SubmissionDto;
-import at.jku.dke.etutor.task_app.dto.SubmissionMode;
-import at.jku.dke.etutor.task_app.dto.SubmitSubmissionDto;
+import at.jku.dke.etutor.task_app.dto.*;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.UUID;
 
@@ -17,6 +15,7 @@ import java.util.UUID;
  *
  * @param <U> The type of the submission input used in {@link SubmitSubmissionDto}.
  */
+@Validated
 public interface SubmissionService<U> {
     /**
      * Enqueues the submission for evaluation.
@@ -24,7 +23,7 @@ public interface SubmissionService<U> {
      * @param submission The submission.
      * @return The submission identifier.
      */
-    UUID enqueue(SubmitSubmissionDto<U> submission);
+    UUID enqueue(@Valid SubmitSubmissionDto<U> submission);
 
     /**
      * Executes the submission and returns the evaluation results.
@@ -33,7 +32,7 @@ public interface SubmissionService<U> {
      * @param persist    Whether the submission should be stored permanently.
      * @return The evaluation results.
      */
-    GradingResult execute(SubmitSubmissionDto<U> submission, boolean persist);
+    GradingResultDto execute(@Valid SubmitSubmissionDto<U> submission, boolean persist);
 
     /**
      * Returns the evaluation results for the specified submission.
@@ -62,13 +61,4 @@ public interface SubmissionService<U> {
      * @param id The submission identifier.
      */
     void delete(UUID id);
-
-    /**
-     * Represents a grading result.
-     *
-     * @param submissionId The submission identifier.
-     * @param grading      The grading result.
-     */
-    record GradingResult(UUID submissionId, @NotNull GradingDto grading) {
-    }
 }

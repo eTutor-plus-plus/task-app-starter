@@ -30,10 +30,3 @@ body:
       description: Add any additional information that help to understand the feature request.
     validations:
       required: false
-  - type: checkboxes
-    id: search
-    attributes:
-      label: Search
-      options:
-        - label: I have used the search function to check whether the feature request already exists.
-          required: true

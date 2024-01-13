@@ -1,6 +1,7 @@
 package at.jku.dke.etutor.task_app.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
@@ -24,7 +25,7 @@ public record SubmitSubmissionDto<T>(
     @Schema(description = "The task identifier.", example = "8911") @NotNull Long taskId,
     @Schema(description = "The user interface language.") @NotNull @Size(min = 2, max = 2) @Pattern(regexp = "de|en") String language,
     @Schema(description = "The submission mode.") @NotNull SubmissionMode mode,
-    @Schema(description = "The feedback level.") @NotNull @Min(0) @Max(3) int feedbackLevel,
-    @Schema(description = "The submission data.") @NotNull T submission
+    @Schema(description = "The feedback level.") @NotNull @Min(0) @Max(3) Integer feedbackLevel,
+    @Schema(description = "The submission data.") @NotNull @Valid T submission
 ) implements Serializable {
 }

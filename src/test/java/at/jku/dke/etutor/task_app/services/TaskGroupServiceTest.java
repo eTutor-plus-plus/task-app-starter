@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,15 +57,15 @@ class TaskGroupServiceTest {
         var service = new TaskGroupServiceImpl();
         var dto = new ModifyTaskGroupDto<>("test", taskStatus, new AdditionalData(someData));
         when(service.getRepository().existsById(id)).thenReturn(false);
-        when(service.getRepository().save(new TaskGroupEntity(id))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(service.getRepository().save(any())).thenAnswer(invocation -> new PersistedEntity(invocation.getArgument(0)));
 
         // Act
         var result = service.create(id, dto);
 
         // Assert
-        assertEquals(id, result.getId());
-        assertEquals(taskStatus, result.getStatus());
-        assertEquals(someData, result.getSomeData());
+        assertNotNull(result);
+        assertFalse(service.beforeCreateCalled instanceof PersistedEntity);
+        assertInstanceOf(PersistedEntity.class, service.afterCreateCalled);
     }
 
     @Test
@@ -91,14 +92,16 @@ class TaskGroupServiceTest {
         var dto = new ModifyTaskGroupDto<>("test", TaskStatus.APPROVED, new AdditionalData("some data"));
         var entity = new TaskGroupEntity(id, TaskStatus.DRAFT, "old data");
         when(service.getRepository().findById(id)).thenReturn(Optional.of(entity));
-        when(service.getRepository().save(new TaskGroupEntity(id))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(service.getRepository().save(any())).thenAnswer(invocation -> new PersistedEntity(invocation.getArgument(0)));
 
         // Act
-        service.update(id, dto);
+        var result = service.update(id, dto);
 
         // Assert
+        assertNotNull(result);
         assertEquals(dto.status(), entity.getStatus());
         assertEquals(dto.additionalData().someData(), entity.getSomeData());
+        assertInstanceOf(PersistedEntity.class, service.afterUpdateCalled);
     }
 
     @Test
@@ -127,6 +130,8 @@ class TaskGroupServiceTest {
 
         // Assert
         verify(service.getRepository(), times(1)).deleteById(id);
+        assertEquals(id, service.beforeDeleteCalled);
+        assertEquals(id, service.afterDeleteCalled);
     }
 
     @Test
@@ -146,6 +151,12 @@ class TaskGroupServiceTest {
     // TODO: test authorities
 
     private static class TaskGroupServiceImpl extends BaseTaskGroupService<TaskGroupEntity, AdditionalData> {
+
+        private TaskGroupEntity beforeCreateCalled;
+        private TaskGroupEntity afterCreateCalled;
+        private TaskGroupEntity afterUpdateCalled;
+        private long beforeDeleteCalled = -1;
+        private long afterDeleteCalled = -1;
 
         public TaskGroupServiceImpl() {
             //noinspection unchecked
@@ -167,9 +178,34 @@ class TaskGroupServiceTest {
         protected void updateTaskGroup(TaskGroupEntity taskGroup, ModifyTaskGroupDto<AdditionalData> dto) {
             taskGroup.setSomeData(dto.additionalData().someData());
         }
+
+        @Override
+        protected void beforeCreate(TaskGroupEntity taskGroup) {
+            this.beforeCreateCalled = taskGroup;
+        }
+
+        @Override
+        protected void afterCreate(TaskGroupEntity taskGroup) {
+            this.afterCreateCalled = taskGroup;
+        }
+
+        @Override
+        protected void afterUpdate(TaskGroupEntity taskGroup) {
+            this.afterUpdateCalled = taskGroup;
+        }
+
+        @Override
+        protected void beforeDelete(long id) {
+            this.beforeDeleteCalled = id;
+        }
+
+        @Override
+        protected void afterDelete(long id) {
+            this.afterDeleteCalled = id;
+        }
     }
 
-    private static class TaskGroupEntity extends BaseTaskGroup {
+    private static class TaskGroupEntity extends BaseTaskGroup implements Serializable {
         private String someData;
 
         public TaskGroupEntity() {
@@ -190,6 +226,12 @@ class TaskGroupServiceTest {
 
         public void setSomeData(String someData) {
             this.someData = someData;
+        }
+    }
+
+    private static class PersistedEntity extends TaskGroupEntity {
+        public PersistedEntity(TaskGroupEntity te) {
+            super(te.getId(), te.getStatus(), te.getSomeData());
         }
     }
 

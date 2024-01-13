@@ -2,6 +2,7 @@ package at.jku.dke.etutor.task_app.controllers;
 
 import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskGroupDto;
+import at.jku.dke.etutor.task_app.dto.TaskGroupModificationResponseDto;
 import at.jku.dke.etutor.task_app.services.TaskGroupService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -50,20 +51,20 @@ public abstract class BaseTaskGroupController<E extends TaskGroup, D, A> impleme
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<D> create(long id, ModifyTaskGroupDto<A> dto) {
-        E created = this.taskGroupService.create(id, dto);
+    public ResponseEntity<TaskGroupModificationResponseDto> create(long id, ModifyTaskGroupDto<A> dto) {
+        TaskGroupModificationResponseDto created = this.taskGroupService.create(id, dto);
         return ResponseEntity
             .created(URI.create("/api/taskGroup/" + id))
-            .body(this.mapToDto(created));
+            .body(created);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<Void> update(long id, ModifyTaskGroupDto<A> dto) {
-        this.taskGroupService.update(id, dto);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<TaskGroupModificationResponseDto> update(long id, ModifyTaskGroupDto<A> dto) {
+        var updated = this.taskGroupService.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     /**
