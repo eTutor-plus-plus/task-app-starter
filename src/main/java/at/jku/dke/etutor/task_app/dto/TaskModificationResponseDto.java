@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public record TaskModificationResponseDto(
     String descriptionDe,
     String descriptionEn,
-    Integer difficulty,
+    Short difficulty,
     BigDecimal maxPoints) {
 
     /**
@@ -31,7 +31,7 @@ public record TaskModificationResponseDto(
      *
      * @param difficulty The difficulty.
      */
-    public TaskModificationResponseDto(int difficulty) {
+    public TaskModificationResponseDto(short difficulty) {
         this(null, null, difficulty, null);
     }
 
