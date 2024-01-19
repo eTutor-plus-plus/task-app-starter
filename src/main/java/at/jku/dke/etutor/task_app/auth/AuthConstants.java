@@ -17,9 +17,9 @@ public final class AuthConstants {
      */
     public static final String AUTH_TOKEN_HEADER_NAME = "X-API-KEY";
 
+    //#region --- Roles ---
     /**
-     * Clients with {@code CRUD} permission are allowed to manage tasks and task groups
-     * as well as submit solutions.
+     * Clients with {@code CRUD} permission are allowed to manage tasks and task groups.
      */
     public static final String CRUD = "CRUD";
 
@@ -32,6 +32,7 @@ public final class AuthConstants {
      * Clients with {@code READ_SUBMISSION} permission are allowed to read submissions.
      */
     public static final String READ_SUBMISSION = "READ_SUBMISSION";
+    //#endregion
 
     //#region --- Authorities ---
     /**

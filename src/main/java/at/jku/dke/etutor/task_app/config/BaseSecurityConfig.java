@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,8 +23,19 @@ import org.springframework.security.web.header.writers.XXssProtectionHeaderWrite
 
 /**
  * Base class for security configuration.
- * <p>
+ * <p/>
  * Override this class and add the {@link org.springframework.context.annotation.Configuration} annotation to the subclass.
+ * <p/>
+ * This class configures the following:
+ * <ul>
+ *     <li>CSRF protection is disabled</li>
+ *     <li>Secure HTTP headers are configured (Referrer Policy, Frame Options, XSS Protection)</li>
+ *     <li>HTTP request authorizations are configured (all /api/ endpoints must be authenticated, actuator endpoints health/* are permitted by all, info needs to be authenticated and all other actuator endpoints need CRUD authority).</li>
+ *     <li>Session management is configured to stateless</li>
+ *     <li>An {@link AuthenticationFilter} is added to the filter chain</li>
+ *     <li>Additional configuration can be done by overriding the {@link #additionalHttpRequestAuthorizationCustomization(AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry)} method</li>
+ *     <li>Additional configuration can be done by overriding the {@link #additionalFilterChainCustomization(HttpSecurity)} method</li>
+ * </ul>
  */
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -66,6 +78,7 @@ public abstract class BaseSecurityConfig {
 
             reg.requestMatchers("/api/**").authenticated();
 
+            additionalHttpRequestAuthorizationCustomization(reg);
             reg.anyRequest().permitAll();
         });
 
@@ -73,7 +86,25 @@ public abstract class BaseSecurityConfig {
 
         http.addFilterBefore(new AuthenticationFilter(authenticationService), UsernamePasswordAuthenticationFilter.class);
 
+        this.additionalFilterChainCustomization(http);
+
         return http.build();
     }
 
+    /**
+     * Override this method to configure additional HTTP request authorizations.
+     *
+     * @param registry The request matcher registry.
+     */
+    protected void additionalHttpRequestAuthorizationCustomization(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
+    }
+
+    /**
+     * Override this method to customize the security filter chain.
+     *
+     * @param http The HTTP security configuration.
+     * @throws Exception If the customization fails.
+     */
+    protected void additionalFilterChainCustomization(HttpSecurity http) throws Exception {
+    }
 }
