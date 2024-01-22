@@ -105,7 +105,6 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
     }
 
     private GradingResultDto execute(SubmitSubmissionDto<U> submission, UUID entityId, boolean persist) {
-        assert !persist || entityId != null;
         LOG.info("Executing submission of task {} for assignment {} for user {}", submission.taskId(), submission.assignmentId(), submission.userId());
 
         // evaluate submission
@@ -126,7 +125,7 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
             }
         }
 
-        return new GradingResultDto(!persist ? null : entity.getId(), result);
+        return new GradingResultDto(!persist || entity == null ? null : entity.getId(), result);
     }
 
     /**
