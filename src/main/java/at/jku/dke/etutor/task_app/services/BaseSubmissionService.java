@@ -78,7 +78,7 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
         S entity = this.createSubmission(submission);
 
         // enqueue submission for evaluation
-        CompletableFuture.runAsync(() -> this.execute(submission, entity, true));
+        CompletableFuture.runAsync(() -> this.execute(submission, entity.getId(), true));
 
         return entity.getId();
     }
@@ -101,25 +101,29 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
             entity = this.createSubmission(submission);
 
         // Execute
-        return this.execute(submission, entity, persist);
+        return this.execute(submission, entity == null ? null : entity.getId(), persist);
     }
 
-    private GradingResultDto execute(SubmitSubmissionDto<U> submission, S entity, boolean persist) {
-        assert !persist || entity != null;
+    private GradingResultDto execute(SubmitSubmissionDto<U> submission, UUID entityId, boolean persist) {
+        assert !persist || entityId != null;
         LOG.info("Executing submission of task {} for assignment {} for user {}", submission.taskId(), submission.assignmentId(), submission.userId());
 
         // evaluate submission
         var result = this.evaluate(submission);
 
         // store result
-        if (persist) {
-            entity.setEvaluationResult(result);
-            this.submissionRepository.save(entity);
-        }
+        S entity = null;
+        if (entityId != null) {
+            entity = this.submissionRepository.findById(entityId).orElseThrow(() -> new EntityNotFoundException("Submission " + entityId + " does not exist"));
+            if (persist) {
+                entity.setEvaluationResult(result);
+                this.submissionRepository.save(entity);
+            }
 
-        // delete entity
-        if (!persist && entity != null) {
-            this.submissionRepository.delete(entity);
+            // delete entity
+            if (!persist && entity != null) {
+                this.submissionRepository.delete(entity);
+            }
         }
 
         return new GradingResultDto(!persist ? null : entity.getId(), result);
