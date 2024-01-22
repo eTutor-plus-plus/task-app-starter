@@ -134,7 +134,7 @@ class SubmissionServiceTest {
         var dto = new SubmitSubmissionDto<>("k123", "quiz1", 1L, "de", SubmissionMode.DIAGNOSE, 1, new AdditionalData("solution"));
         var id = UUID.randomUUID();
         when(service.getTaskRepository().getReferenceById(anyLong())).thenReturn(new TaskEntity(1L));
-        when(service.getSubmissionRepository().save(any())).thenAnswer(invocation -> {
+        when(service.getSubmissionRepository().saveAndFlush(any())).thenAnswer(invocation -> {
             var entity = invocation.getArgument(0);
             ((SubmissionEntity) entity).setId(id);
             return entity;
