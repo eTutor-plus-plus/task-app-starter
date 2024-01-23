@@ -1,8 +1,5 @@
 package at.jku.dke.etutor.task_app.controllers;
 
-import at.jku.dke.etutor.task_app.data.entities.BaseTask;
-import at.jku.dke.etutor.task_app.data.entities.BaseTaskInGroup;
-import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.dto.*;
 import at.jku.dke.etutor.task_app.services.BaseSubmissionService;
 import at.jku.dke.etutor.task_app.services.SubmissionService;
@@ -218,7 +215,7 @@ class BaseSubmissionControllerTest {
         assertEquals(1, result.getBody().getContent().size());
     }
 
-    private static class SubmissionController extends BaseSubmissionController<TestTask, String> {
+    private static class SubmissionController extends BaseSubmissionController<String> {
         public SubmissionController() {
             //noinspection unchecked
             super(mock(BaseSubmissionService.class));
@@ -226,12 +223,6 @@ class BaseSubmissionControllerTest {
 
         public SubmissionService<String> getSubmissionService() {
             return submissionService;
-        }
-    }
-
-    private static class TestTask extends BaseTaskInGroup<TaskGroup> {
-        public TestTask(Long id) {
-            super(id, BigDecimal.ZERO, TaskStatus.APPROVED, null);
         }
     }
 }
