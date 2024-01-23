@@ -1,10 +1,7 @@
 package at.jku.dke.etutor.task_app.services;
 
 import at.jku.dke.etutor.task_app.auth.AuthConstants;
-import at.jku.dke.etutor.task_app.data.entities.BaseSubmission;
-import at.jku.dke.etutor.task_app.data.entities.BaseTask;
-import at.jku.dke.etutor.task_app.data.entities.Submission;
-import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
+import at.jku.dke.etutor.task_app.data.entities.*;
 import at.jku.dke.etutor.task_app.data.repositories.SubmissionRepository;
 import at.jku.dke.etutor.task_app.data.repositories.TaskRepository;
 import at.jku.dke.etutor.task_app.dto.*;
@@ -232,7 +229,7 @@ class SubmissionServiceTest {
         }
     }
 
-    private static class TaskEntity extends BaseTask<TaskGroup> {
+    private static class TaskEntity extends BaseTaskInGroup<TaskGroup> {
 
         public TaskEntity(Long id) {
             super(id, BigDecimal.ZERO, TaskStatus.APPROVED, null);

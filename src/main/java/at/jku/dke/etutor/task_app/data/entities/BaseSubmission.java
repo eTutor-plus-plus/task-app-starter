@@ -31,7 +31,7 @@ import java.util.UUID;
  * @param <T> The type of the task.
  */
 @MappedSuperclass
-public abstract class BaseSubmission<T extends Task<?>> implements Submission<T> {
+public abstract class BaseSubmission<T extends Task> implements Submission<T> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
@@ -280,7 +280,7 @@ public abstract class BaseSubmission<T extends Task<?>> implements Submission<T>
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o)
             return true;
         if (o == null)
@@ -300,7 +300,7 @@ public abstract class BaseSubmission<T extends Task<?>> implements Submission<T>
     }
 
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return this instanceof HibernateProxy hp ?
             hp.getHibernateLazyInitializer().getPersistentClass().hashCode() :
             getClass().hashCode();

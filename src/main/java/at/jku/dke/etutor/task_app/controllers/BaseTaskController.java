@@ -19,19 +19,19 @@ import java.util.Optional;
  * @param <D> The type of the task DTO.
  * @param <A> The type of the additional data in {@link ModifyTaskDto}.
  */
-public abstract class BaseTaskController<E extends Task<?>, D, A> implements TaskController<D, A> {
+public abstract class BaseTaskController<E extends Task, D, A> implements TaskController<D, A> {
 
     /**
      * The task group service.
      */
-    protected final TaskService<E, ?, A> taskService;
+    protected final TaskService<E, A> taskService;
 
     /**
      * Creates a new instance of class {@link BaseTaskController}.
      *
      * @param taskService The task group service.
      */
-    protected BaseTaskController(TaskService<E, ?, A> taskService) {
+    protected BaseTaskController(TaskService<E, A> taskService) {
         this.taskService = taskService;
     }
 

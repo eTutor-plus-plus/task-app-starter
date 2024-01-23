@@ -33,7 +33,7 @@ import java.util.concurrent.CompletableFuture;
  * @param <S> The submission type.
  * @param <U> The type of the submission input used in {@link SubmitSubmissionDto}.
  */
-public abstract class BaseSubmissionService<T extends Task<?>, S extends Submission<T>, U> implements SubmissionService<U> {
+public abstract class BaseSubmissionService<T extends Task, S extends Submission<T>, U> implements SubmissionService<U> {
     /**
      * The logger used in this class.
      */

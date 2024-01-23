@@ -1,7 +1,7 @@
 package at.jku.dke.etutor.task_app.controllers;
 
-import at.jku.dke.etutor.task_app.data.entities.BaseTask;
 import at.jku.dke.etutor.task_app.data.entities.BaseTaskGroup;
+import at.jku.dke.etutor.task_app.data.entities.BaseTaskInGroup;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
 import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
 import at.jku.dke.etutor.task_app.dto.TaskStatus;
@@ -117,7 +117,7 @@ class BaseTaskControllerTest {
             super(mock(BaseTaskService.class));
         }
 
-        public TaskService<TestTask, ?, AdditionalData> getTaskService() {
+        public TaskService<TestTask, AdditionalData> getTaskService() {
             return taskService;
         }
 
@@ -130,7 +130,7 @@ class BaseTaskControllerTest {
     private record TaskDto(String data) {
     }
 
-    private static class TestTask extends BaseTask<TestTaskGroup> implements Serializable {
+    private static class TestTask extends BaseTaskInGroup<TestTaskGroup> implements Serializable {
         private String data;
 
         public TestTask(Long id) {

@@ -1,6 +1,7 @@
 package at.jku.dke.etutor.task_app.controllers;
 
 import at.jku.dke.etutor.task_app.data.entities.BaseTask;
+import at.jku.dke.etutor.task_app.data.entities.BaseTaskInGroup;
 import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.dto.*;
 import at.jku.dke.etutor.task_app.services.BaseSubmissionService;
@@ -228,7 +229,7 @@ class BaseSubmissionControllerTest {
         }
     }
 
-    private static class TestTask extends BaseTask<TaskGroup> {
+    private static class TestTask extends BaseTaskInGroup<TaskGroup> {
         public TestTask(Long id) {
             super(id, BigDecimal.ZERO, TaskStatus.APPROVED, null);
         }

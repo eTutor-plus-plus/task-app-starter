@@ -6,10 +6,8 @@ import java.math.BigDecimal;
 
 /**
  * Interface for task entity.
- *
- * @param <T> The type of the task group.
  */
-public interface Task<T extends TaskGroup> {
+public interface Task {
     /**
      * Gets the id.
      *
@@ -51,18 +49,4 @@ public interface Task<T extends TaskGroup> {
      * @param status The status.
      */
     void setStatus(TaskStatus status);
-
-    /**
-     * Gets the task group.
-     *
-     * @return The task group.
-     */
-    T getTaskGroup();
-
-    /**
-     * Sets the task group.
-     *
-     * @param taskGroup The task group.
-     */
-    void setTaskGroup(T taskGroup);
 }

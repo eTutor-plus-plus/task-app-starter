@@ -1,7 +1,6 @@
 package at.jku.dke.etutor.task_app.services;
 
 import at.jku.dke.etutor.task_app.data.entities.Task;
-import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
 import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,11 +14,10 @@ import java.util.Optional;
  * Interface for classes that manage {@link Task}s.
  *
  * @param <T> The task type.
- * @param <G> The task group type.
  * @param <S> The type of the additional data used in {@link ModifyTaskDto}.
  */
 @Validated
-public interface TaskService<T extends Task<G>, G extends TaskGroup, S> {
+public interface TaskService<T extends Task, S> {
     /**
      * Returns the task with the specified identifier.
      *

@@ -490,7 +490,7 @@ class SubmissionTest {
         }
     }
 
-    private static class TaskTestEntity extends BaseTask<TaskGroup> {
+    private static class TaskTestEntity extends BaseTaskInGroup<TaskGroup> {
     }
 
     private static class HibernateProxySubmissionTestEntity extends SubmissionTestEntity implements HibernateProxy {

@@ -21,7 +21,7 @@ import java.util.UUID;
  * @param <T> The task type.
  * @param <A> The type of the submission input used in {@link SubmitSubmissionDto}.
  */
-public abstract class BaseSubmissionController<T extends Task<?>, A> implements SubmissionController<A> {
+public abstract class BaseSubmissionController<T extends Task, A> implements SubmissionController<A> {
 
     /**
      * The submission service.
