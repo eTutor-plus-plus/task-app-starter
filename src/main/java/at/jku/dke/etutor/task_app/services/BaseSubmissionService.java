@@ -33,7 +33,7 @@ import java.util.concurrent.CompletableFuture;
  * @param <S> The submission type.
  * @param <U> The type of the submission input used in {@link SubmitSubmissionDto}.
  */
-public abstract class BaseSubmissionService<T extends Task<?>, S extends Submission<T>, U> implements SubmissionService<U> {
+public abstract class BaseSubmissionService<T extends Task, S extends Submission<T>, U> implements SubmissionService<U> {
     /**
      * The logger used in this class.
      */
@@ -69,7 +69,6 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
      * @return The submission identifier.
      */
     @Override
-    @Transactional
     @PreAuthorize(AuthConstants.SUBMIT_AUTHORITY)
     public UUID enqueue(@Valid SubmitSubmissionDto<U> submission) {
         LOG.info("Enqueueing submission of task {} for assignment {} for user {}", submission.taskId(), submission.assignmentId(), submission.userId());
@@ -78,7 +77,7 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
         S entity = this.createSubmission(submission);
 
         // enqueue submission for evaluation
-        CompletableFuture.runAsync(() -> this.execute(submission, entity, true));
+        CompletableFuture.runAsync(() -> this.execute(submission, entity.getId(), true));
 
         return entity.getId();
     }
@@ -91,7 +90,6 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
      * @return The evaluation results.
      */
     @Override
-    @Transactional
     @PreAuthorize(AuthConstants.SUBMIT_AUTHORITY)
     public GradingResultDto execute(@Valid SubmitSubmissionDto<U> submission, boolean persist) {
         S entity = null;
@@ -101,18 +99,27 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
             entity = this.createSubmission(submission);
 
         // Execute
-        return this.execute(submission, entity, persist);
+        return this.execute(submission, entity == null ? null : entity.getId(), persist);
     }
 
-    private GradingResultDto execute(SubmitSubmissionDto<U> submission, S entity, boolean persist) {
-        assert !persist || entity != null;
+    private GradingResultDto execute(SubmitSubmissionDto<U> submission, UUID entityId, boolean persist) {
         LOG.info("Executing submission of task {} for assignment {} for user {}", submission.taskId(), submission.assignmentId(), submission.userId());
 
         // evaluate submission
         var result = this.evaluate(submission);
 
+        // Load entity
+        S entity = null;
+        if (entityId != null) {
+            entity = this.submissionRepository.findById(entityId).orElse(null);
+            if (entity == null) {
+                LOG.error("Submission {} not found, but should exist", entityId);
+                throw new EntityNotFoundException("Submission " + entityId + " does not exist");
+            }
+        }
+
         // store result
-        if (persist) {
+        if (persist && entity != null) {
             entity.setEvaluationResult(result);
             this.submissionRepository.save(entity);
         }
@@ -122,7 +129,8 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
             this.submissionRepository.delete(entity);
         }
 
-        return new GradingResultDto(!persist ? null : entity.getId(), result);
+
+        return new GradingResultDto(!persist || entity == null ? null : entity.getId(), result);
     }
 
     /**
@@ -154,7 +162,7 @@ public abstract class BaseSubmissionService<T extends Task<?>, S extends Submiss
         entity.setFeedbackLevel(dto.feedbackLevel());
         entity.setLanguage(dto.language());
         entity.setMode(dto.mode());
-        return this.submissionRepository.save(entity);
+        return this.submissionRepository.saveAndFlush(entity);
     }
 
     //#endregion

@@ -2,10 +2,10 @@ package at.jku.dke.etutor.task_app.data.entities;
 
 import at.jku.dke.etutor.task_app.data.converters.TaskStatusConverter;
 import at.jku.dke.etutor.task_app.dto.TaskStatus;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
@@ -20,11 +20,9 @@ import java.util.StringJoiner;
  * &#64;Entity
  * &#64;Table(name = "task")
  * </pre>
- *
- * @param <T> The type of the task group.
  */
 @MappedSuperclass
-public abstract class BaseTask<T extends TaskGroup> implements Task<T> {
+public abstract class BaseTask implements Task {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
@@ -35,12 +33,6 @@ public abstract class BaseTask<T extends TaskGroup> implements Task<T> {
     @Convert(converter = TaskStatusConverter.class)
     @Column(name = "status", columnDefinition = "task_status not null")
     private TaskStatus status;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "task_group_id")
-    private T taskGroup;
 
     /**
      * Creates a new instance of class {@link BaseTask}.
@@ -53,12 +45,10 @@ public abstract class BaseTask<T extends TaskGroup> implements Task<T> {
      *
      * @param maxPoints The maximum achievable points.
      * @param status    The status.
-     * @param taskGroup The task group.
      */
-    protected BaseTask(BigDecimal maxPoints, TaskStatus status, T taskGroup) {
+    protected BaseTask(BigDecimal maxPoints, TaskStatus status) {
         this.maxPoints = maxPoints;
         this.status = status;
-        this.taskGroup = taskGroup;
     }
 
     /**
@@ -67,13 +57,11 @@ public abstract class BaseTask<T extends TaskGroup> implements Task<T> {
      * @param id        The id.
      * @param maxPoints The maximum achievable points.
      * @param status    The status.
-     * @param taskGroup The task group.
      */
-    protected BaseTask(Long id, BigDecimal maxPoints, TaskStatus status, T taskGroup) {
+    protected BaseTask(Long id, BigDecimal maxPoints, TaskStatus status) {
         this.id = id;
         this.maxPoints = maxPoints;
         this.status = status;
-        this.taskGroup = taskGroup;
     }
 
     /**
@@ -136,28 +124,8 @@ public abstract class BaseTask<T extends TaskGroup> implements Task<T> {
         this.status = status;
     }
 
-    /**
-     * Gets the task group.
-     *
-     * @return The task group.
-     */
     @Override
-    public T getTaskGroup() {
-        return taskGroup;
-    }
-
-    /**
-     * Sets the task group.
-     *
-     * @param taskGroup The task group.
-     */
-    @Override
-    public void setTaskGroup(T taskGroup) {
-        this.taskGroup = taskGroup;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o)
             return true;
         if (o == null)
@@ -172,12 +140,12 @@ public abstract class BaseTask<T extends TaskGroup> implements Task<T> {
         if (thisEffectiveClass != oEffectiveClass)
             return false;
 
-        Task<?> task = (Task<?>) o;
+        Task task = (Task) o;
         return getId() != null && Objects.equals(getId(), task.getId());
     }
 
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return this instanceof HibernateProxy hp ?
             hp.getHibernateLazyInitializer().getPersistentClass().hashCode() :
             getClass().hashCode();

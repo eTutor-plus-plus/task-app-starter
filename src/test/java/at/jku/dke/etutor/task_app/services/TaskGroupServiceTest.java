@@ -1,5 +1,6 @@
 package at.jku.dke.etutor.task_app.services;
 
+import at.jku.dke.etutor.task_app.auth.AuthConstants;
 import at.jku.dke.etutor.task_app.data.entities.BaseTaskGroup;
 import at.jku.dke.etutor.task_app.data.repositories.TaskGroupRepository;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskGroupDto;
@@ -7,6 +8,7 @@ import at.jku.dke.etutor.task_app.dto.TaskStatus;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -148,7 +150,11 @@ class TaskGroupServiceTest {
     }
     //#endregion
 
-    // TODO: test authorities
+    @Test
+    void testAuthorities() {
+        var cls = BaseTaskGroupService.class.getAnnotation(PreAuthorize.class);
+        assertEquals(AuthConstants.CRUD_AUTHORITY, cls.value());
+    }
 
     private static class TaskGroupServiceImpl extends BaseTaskGroupService<TaskGroupEntity, AdditionalData> {
 

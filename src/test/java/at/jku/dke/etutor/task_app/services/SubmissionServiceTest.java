@@ -1,8 +1,7 @@
 package at.jku.dke.etutor.task_app.services;
 
-import at.jku.dke.etutor.task_app.data.entities.BaseSubmission;
-import at.jku.dke.etutor.task_app.data.entities.BaseTask;
-import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
+import at.jku.dke.etutor.task_app.auth.AuthConstants;
+import at.jku.dke.etutor.task_app.data.entities.*;
 import at.jku.dke.etutor.task_app.data.repositories.SubmissionRepository;
 import at.jku.dke.etutor.task_app.data.repositories.TaskRepository;
 import at.jku.dke.etutor.task_app.dto.*;
@@ -14,12 +13,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -134,7 +131,7 @@ class SubmissionServiceTest {
         var dto = new SubmitSubmissionDto<>("k123", "quiz1", 1L, "de", SubmissionMode.DIAGNOSE, 1, new AdditionalData("solution"));
         var id = UUID.randomUUID();
         when(service.getTaskRepository().getReferenceById(anyLong())).thenReturn(new TaskEntity(1L));
-        when(service.getSubmissionRepository().save(any())).thenAnswer(invocation -> {
+        when(service.getSubmissionRepository().saveAndFlush(any())).thenAnswer(invocation -> {
             var entity = invocation.getArgument(0);
             ((SubmissionEntity) entity).setId(id);
             return entity;
@@ -164,7 +161,18 @@ class SubmissionServiceTest {
     }
     //#endregion
 
-    // TODO: test authorities
+    @Test
+    void testAuthorities() throws NoSuchMethodException {
+        var enqueue = BaseSubmissionService.class.getMethod("enqueue", SubmitSubmissionDto.class).getAnnotation(PreAuthorize.class);
+        var execute = BaseSubmissionService.class.getMethod("execute", SubmitSubmissionDto.class, boolean.class).getAnnotation(PreAuthorize.class);
+        var getEvaluationResult = BaseSubmissionService.class.getMethod("getEvaluationResult", UUID.class).getAnnotation(PreAuthorize.class);
+        var getSubmissions = BaseSubmissionService.class.getMethod("getSubmissions", Pageable.class, String.class, Long.class, String.class, SubmissionMode.class).getAnnotation(PreAuthorize.class);
+
+        assertEquals(AuthConstants.SUBMIT_AUTHORITY, enqueue.value());
+        assertEquals(AuthConstants.SUBMIT_AUTHORITY, execute.value());
+        assertEquals(AuthConstants.SUBMIT_AUTHORITY, getEvaluationResult.value());
+        assertEquals(AuthConstants.READ_SUBMISSION_AUTHORITY, getSubmissions.value());
+    }
 
     private static class SubmissionServiceImpl extends BaseSubmissionService<TaskEntity, SubmissionEntity, AdditionalData> {
 
@@ -221,7 +229,7 @@ class SubmissionServiceTest {
         }
     }
 
-    private static class TaskEntity extends BaseTask<TaskGroup> {
+    private static class TaskEntity extends BaseTaskInGroup<TaskGroup> {
 
         public TaskEntity(Long id) {
             super(id, BigDecimal.ZERO, TaskStatus.APPROVED, null);

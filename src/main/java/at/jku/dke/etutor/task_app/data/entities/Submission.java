@@ -11,7 +11,7 @@ import java.util.UUID;
  *
  * @param <T> The type of the task.
  */
-public interface Submission<T extends Task<?>> {
+public interface Submission<T extends Task> {
     /**
      * Gets the id.
      *

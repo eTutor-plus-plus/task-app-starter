@@ -2,8 +2,6 @@ package at.jku.dke.etutor.task_app.services;
 
 import at.jku.dke.etutor.task_app.auth.AuthConstants;
 import at.jku.dke.etutor.task_app.data.entities.Task;
-import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
-import at.jku.dke.etutor.task_app.data.repositories.TaskGroupRepository;
 import at.jku.dke.etutor.task_app.data.repositories.TaskRepository;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
 import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
@@ -21,11 +19,10 @@ import java.util.Optional;
  * This class provides methods for managing {@link Task}s.
  *
  * @param <T> The task type.
- * @param <G> The task group type.
  * @param <S> The type of the additional data used in {@link ModifyTaskDto}.
  */
 @PreAuthorize(AuthConstants.CRUD_AUTHORITY)
-public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S> implements TaskService<T, G, S> {
+public abstract class BaseTaskService<T extends Task, S> implements TaskService<T, S> {
     /**
      * The logger used in this class.
      */
@@ -37,19 +34,12 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
     protected final TaskRepository<T> repository;
 
     /**
-     * The task group repository.
-     */
-    protected final TaskGroupRepository<G> taskGroupRepository;
-
-    /**
      * Creates a new instance of class {@link BaseTaskService}.
      *
-     * @param repository          The task repository.
-     * @param taskGroupRepository The task group repository.
+     * @param repository The task repository.
      */
-    protected BaseTaskService(TaskRepository<T> repository, TaskGroupRepository<G> taskGroupRepository) {
+    protected BaseTaskService(TaskRepository<T> repository) {
         this.repository = repository;
-        this.taskGroupRepository = taskGroupRepository;
     }
 
     //#region --- View ---
@@ -90,7 +80,7 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
         task.setId(id);
         task.setStatus(dto.status());
         task.setMaxPoints(dto.maxPoints());
-        task.setTaskGroup(this.taskGroupRepository.getReferenceById(dto.taskGroupId()));
+        this.beforeCreateInternal(task, dto);
 
         this.beforeCreate(task);
         task = this.repository.save(task);
@@ -115,7 +105,7 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
         LOG.info("Updating task {}", id);
         task.setStatus(dto.status());
         task.setMaxPoints(dto.maxPoints());
-        task.setTaskGroup(this.taskGroupRepository.getReferenceById(dto.taskGroupId()));
+        this.updateInternal(task, dto);
         this.updateTask(task, dto);
 
         task = this.repository.save(task);
@@ -168,6 +158,26 @@ public abstract class BaseTaskService<T extends Task<G>, G extends TaskGroup, S>
      */
     protected TaskModificationResponseDto mapToReturnData(T task, boolean create) {
         return new TaskModificationResponseDto(null, null, null, null);
+    }
+
+    /**
+     * Called before the task is stored in the database.
+     * Only available for internal classes.
+     *
+     * @param task The task to create.
+     * @param dto  The task data.
+     */
+    void beforeCreateInternal(T task, ModifyTaskDto<S> dto) {
+    }
+
+    /**
+     * Called before the task is updated in the database.
+     * Only available for internal classes.
+     *
+     * @param task The task to update.
+     * @param dto The task data.
+     */
+    void updateInternal(T task, ModifyTaskDto<S> dto) {
     }
 
     /**

@@ -303,7 +303,7 @@ class TaskTest {
         assertEquals("TaskTestEntity[id=1]", result);
     }
 
-    private static class TaskTestEntity extends BaseTask<TaskGroupTestEntity> {
+    private static class TaskTestEntity extends BaseTaskInGroup<TaskGroupTestEntity> {
         public TaskTestEntity() {
         }
 

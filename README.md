@@ -23,7 +23,6 @@ Additionally, you have to add the following repository to your `~/.m2/settings.x
 Replace `USERNAME` with your GitHub username and `TOKEN` with a classic GitHub access token with `read:packages` scope.
 
 ```xml
-
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
@@ -64,7 +63,9 @@ Replace `USERNAME` with your GitHub username and `TOKEN` with a classic GitHub a
     </servers>
 </settings>
 ```
+
 Alternatively, you can download the `https://github.com/eTutor-plus-plus/task-app-starter` project and install it locally with `mvn install`.
+This is also required if you want to use the latest snapshot version.
 
 ## Development
 

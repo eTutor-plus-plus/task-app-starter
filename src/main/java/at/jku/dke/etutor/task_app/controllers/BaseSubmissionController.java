@@ -1,6 +1,5 @@
 package at.jku.dke.etutor.task_app.controllers;
 
-import at.jku.dke.etutor.task_app.data.entities.Task;
 import at.jku.dke.etutor.task_app.dto.*;
 import at.jku.dke.etutor.task_app.services.SubmissionService;
 import org.springframework.data.domain.Page;
@@ -18,10 +17,9 @@ import java.util.UUID;
  * <p>
  * Add <code>@RestController</code> to the extending class.
  *
- * @param <T> The task type.
  * @param <A> The type of the submission input used in {@link SubmitSubmissionDto}.
  */
-public abstract class BaseSubmissionController<T extends Task<?>, A> implements SubmissionController<A> {
+public abstract class BaseSubmissionController<A> implements SubmissionController<A> {
 
     /**
      * The submission service.

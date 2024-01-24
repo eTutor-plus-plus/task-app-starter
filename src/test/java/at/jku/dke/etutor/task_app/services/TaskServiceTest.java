@@ -1,7 +1,8 @@
 package at.jku.dke.etutor.task_app.services;
 
-import at.jku.dke.etutor.task_app.data.entities.BaseTask;
+import at.jku.dke.etutor.task_app.auth.AuthConstants;
 import at.jku.dke.etutor.task_app.data.entities.BaseTaskGroup;
+import at.jku.dke.etutor.task_app.data.entities.BaseTaskInGroup;
 import at.jku.dke.etutor.task_app.data.repositories.TaskGroupRepository;
 import at.jku.dke.etutor.task_app.data.repositories.TaskRepository;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
@@ -9,6 +10,7 @@ import at.jku.dke.etutor.task_app.dto.TaskStatus;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -157,9 +159,13 @@ class TaskServiceTest {
     }
     //#endregion
 
-    // TODO: test authorities
+    @Test
+    void testAuthorities() throws NoSuchMethodException {
+        var cls = BaseTaskService.class.getAnnotation(PreAuthorize.class);
+        assertEquals(AuthConstants.CRUD_AUTHORITY, cls.value());
+    }
 
-    private static class TaskServiceImpl extends BaseTaskService<TaskEntity, TaskGroupEntity, AdditionalData> {
+    private static class TaskServiceImpl extends BaseTaskInGroupService<TaskEntity, TaskGroupEntity, AdditionalData> {
 
         private TaskEntity beforeCreateCalled;
         private TaskEntity afterCreateCalled;
@@ -218,7 +224,7 @@ class TaskServiceTest {
         }
     }
 
-    private static class TaskEntity extends BaseTask<TaskGroupEntity> implements Serializable {
+    private static class TaskEntity extends BaseTaskInGroup<TaskGroupEntity> implements Serializable {
         private String someData;
 
         public TaskEntity() {

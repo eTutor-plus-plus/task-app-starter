@@ -15,5 +15,6 @@
  *       role: READ_SUBMISSION
  *     - ...
  * </pre>
+ * You can find the supported roles in {@link at.jku.dke.etutor.task_app.auth.AuthConstants}.
  */
 package at.jku.dke.etutor.task_app.auth;
