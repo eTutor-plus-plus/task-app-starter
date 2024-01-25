@@ -1,7 +1,9 @@
 package at.jku.dke.etutor.task_app.services;
 
 import at.jku.dke.etutor.task_app.auth.AuthConstants;
-import at.jku.dke.etutor.task_app.data.entities.*;
+import at.jku.dke.etutor.task_app.data.entities.BaseSubmission;
+import at.jku.dke.etutor.task_app.data.entities.BaseTaskInGroup;
+import at.jku.dke.etutor.task_app.data.entities.TaskGroup;
 import at.jku.dke.etutor.task_app.data.repositories.SubmissionRepository;
 import at.jku.dke.etutor.task_app.data.repositories.TaskRepository;
 import at.jku.dke.etutor.task_app.dto.*;
@@ -16,7 +18,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -239,4 +244,5 @@ class SubmissionServiceTest {
 
     private record AdditionalData(String solution) {
     }
+
 }
