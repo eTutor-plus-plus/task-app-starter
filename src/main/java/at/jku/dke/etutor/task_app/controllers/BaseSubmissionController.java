@@ -63,6 +63,8 @@ public abstract class BaseSubmissionController<A> implements SubmissionControlle
     public ResponseEntity<GradingDto> getResult(UUID id, int timeout, boolean delete) {
         if (timeout < 0)
             timeout = 0;
+        if (timeout > 60)
+            timeout = 60;
 
         GradingDto result;
         int remainingTimeout = timeout;
