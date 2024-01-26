@@ -7,6 +7,9 @@ import org.springframework.security.core.authority.AuthorityUtils;
  * API-key authentication token.
  */
 public class ApiKeyAuthentication extends AbstractAuthenticationToken {
+    /**
+     * The API key.
+     */
     private final ApiKeyConfiguration.ApiKey apiKey;
 
     /**
