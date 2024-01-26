@@ -43,7 +43,7 @@ public interface SubmissionController<T> {
      */
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Submission graded", content = @Content(schema = @Schema(implementation = GradingDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)),
+        @ApiResponse(responseCode = "200", description = "Submission graded", content = @Content(schema = @Schema(implementation = GradingResultDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)),
         @ApiResponse(responseCode = "202", description = "Submission enqueued for grading", content = @Content(schema = @Schema(implementation = UUID.class, description = "The submission identifier."),
             mediaType = MediaType.TEXT_PLAIN_VALUE), headers = @Header(name = "Location", description = "The location of the submission result.")),
         @ApiResponse(responseCode = "400", description = "Invalid submission data", content = @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE)),

@@ -440,7 +440,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Grading'
+                $ref: '#/components/schemas/SubmissionResult'
         '202':
           description: Submission dispatched for grading
           headers:
@@ -692,6 +692,17 @@ components:
           additionalProperties: true
           example:
             solution: SELECT * FROM student;
+    SubmissionResult:
+      required:
+        - grading
+      type: object
+      properties:
+        submissionId:
+          type: string
+          description: The submission identifier.
+          format: uuid
+        grading:
+          $ref: '#/components/schemas/Grading'
     Grading:
       required:
         - criteria
