@@ -1,5 +1,11 @@
 # eTutor Task App: Starter
 
+[![Test Library](https://github.com/eTutor-plus-plus/task-app-starter/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/eTutor-plus-plus/task-app-starter/actions/workflows/test.yml)
+[![Publish Library](https://github.com/eTutor-plus-plus/task-app-starter/actions/workflows/publish.yml/badge.svg)](https://github.com/eTutor-plus-plus/task-app-starter/actions/workflows/publish.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/eTutor-plus-plus/task-app-starter?include_prereleases&logo=github)](https://github.com/eTutor-plus-plus/task-app-starter/releases)
+[![GitHub issues](https://img.shields.io/github/issues/eTutor-plus-plus/task-app-starter?logo=github)](https://github.com/eTutor-plus-plus/task-app-starter/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/eTutor-plus-plus/task-app-starter?logo=github)](https://github.com/eTutor-plus-plus/task-app-starter/pulls)
+
 Library for eTutor Task Apps.
 
 This library can be used to create a new eTutor Task App with Spring boot.
@@ -11,7 +17,6 @@ See [Javadoc](https://eTutor-plus-plus.github.io/task-app-starter/) for more inf
 Add the following dependency to your `pom.xml` file (set the version accordingly):
 
 ```xml
-
 <dependency>
     <groupId>at.jku.dke.etutor</groupId>
     <artifactId>etutor-task-app-starter</artifactId>
@@ -69,4 +74,4 @@ This is also required if you want to use the latest snapshot version.
 
 ## Development
 
-See [CONTRIBUTING.md](https://github.com/eTutor-plus-plus/task-app-starter/blob/main/CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](CONTRIBUTING.md), [USAGE.md](documentation/USAGE.md) and [TUTORIAL.md](documentation/TUTORIAL.md) for details.

@@ -1,0 +1,65 @@
+@startuml
+!theme plain
+
+together {
+    interface TaskGroup {
+        + Long getId()
+        + void setId(Long)
+        + TaskStatus getStatus()
+        + void setStatus(TaskStatus)
+    }
+
+    abstract class BaseTaskGroup
+}
+
+together {
+    interface Task {
+        + Long getId()
+        + void setId(Long)
+        + BigDecimal getMaxPoints()
+        + void setMaxPoints(BigDecimal)
+        + TaskStatus getStatus()
+        + void setStatus(TaskStatus)
+    }
+    
+    interface TaskInGroup<T extends TaskGroup> extends Task {
+        + T getTaskGroup()
+        + void setTaskGroup(T)
+    }
+
+    abstract class BaseTask
+    abstract class BaseTaskInGroup<T extends TaskGroup> extends BaseTask
+}
+
+together {
+    interface Submission<T extends Task> {
+        + UUID getId()
+        + void setId(UUID)
+        + String getAssignmentId()
+        + void setAssignmentId(String)
+        + String getUserId()
+        + void setUserId(String)
+        + T getTask()
+        + void setTask(T)
+        + Instant getSubmissionTime()
+        + void setSubmissionTime(Instant)
+        + int getFeedbackLevel()
+        + void setFeedbackLevel(int)
+        + String getLanguage()
+        + void setLanguage(String)
+        + SubmissionMode getMode()
+        + void setMode(SubmissionMode)
+        + GradingDto getEvaluationResult()
+        + void setEvaluationResult(GradingDto)
+    }
+
+    abstract class BaseSubmission
+}
+Task <|.. BaseTask
+TaskInGroup <|.. BaseTaskInGroup
+TaskGroup <|.. BaseTaskGroup
+Submission <|.. BaseSubmission
+
+TaskInGroup "*" -- "1" TaskGroup
+Submission "*" -- "1" Task
+@enduml

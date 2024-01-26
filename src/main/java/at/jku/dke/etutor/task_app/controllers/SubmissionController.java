@@ -62,7 +62,7 @@ public interface SubmissionController<T> {
      * Returns the evaluation result for a submission.
      *
      * @param id      The submission identifier.
-     * @param timeout The maximum time to wait for the result in seconds (default: {@code 10}).
+     * @param timeout The maximum time to wait for the result in seconds (default: {@code 10}, maximum: {@code 60}).
      * @param delete  Whether the submission should be deleted.
      * @return The result of the submission or an error response.
      * @implSpec Only clients with role {@link at.jku.dke.etutor.task_app.auth.AuthConstants#SUBMIT} should be allowed to access this endpoint.

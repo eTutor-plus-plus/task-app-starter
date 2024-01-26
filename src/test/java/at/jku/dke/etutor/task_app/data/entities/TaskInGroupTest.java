@@ -11,19 +11,21 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskTest {
+class TaskInGroupTest {
 
     @Test
     void testConstructorPartial() {
         // Arrange
         final BigDecimal points = BigDecimal.TWO;
         final TaskStatus status = TaskStatus.READY_FOR_APPROVAL;
+        final TaskGroupTestEntity taskGroup = new TaskGroupTestEntity();
 
         // Act
-        var task = new TaskTestEntity(points, status);
+        var task = new TaskTestEntity(points, status, taskGroup);
 
         // Assert
         assertEquals(status, task.getStatus());
+        assertEquals(taskGroup, task.getTaskGroup());
         assertEquals(points, task.getMaxPoints());
     }
 
@@ -33,14 +35,16 @@ class TaskTest {
         final long id = 11;
         final BigDecimal points = BigDecimal.TWO;
         final TaskStatus status = TaskStatus.READY_FOR_APPROVAL;
+        final TaskGroupTestEntity taskGroup = new TaskGroupTestEntity();
 
         // Act
-        var task = new TaskTestEntity(id, points, status);
+        var task = new TaskTestEntity(id, points, status, taskGroup);
 
         // Assert
         assertEquals(id, task.getId());
         assertEquals(status, task.getStatus());
         assertEquals(points, task.getMaxPoints());
+        assertEquals(taskGroup, task.getTaskGroup());
     }
 
     @Test
@@ -86,6 +90,20 @@ class TaskTest {
     }
 
     @Test
+    void testGetSetTaskGroup() {
+        // Arrange
+        var task = new TaskTestEntity();
+        final TaskGroupTestEntity value = new TaskGroupTestEntity();
+
+        // Act
+        task.setTaskGroup(value);
+        var result = task.getTaskGroup();
+
+        // Assert
+        assertEquals(value, result);
+    }
+
+    @Test
     void testEquals() {
         // Arrange
         var task1 = new TaskTestEntity();
@@ -103,15 +121,23 @@ class TaskTest {
         task4.setMaxPoints(BigDecimal.TWO);
         task5.setStatus(TaskStatus.DRAFT);
 
+        var task6 = new TaskTestEntity();
+        task6.setId(1L);
+        task4.setMaxPoints(BigDecimal.TWO);
+        task6.setStatus(TaskStatus.DRAFT);
+        task6.setTaskGroup(new TaskGroupTestEntity());
+
         // Act
         var result1 = task1.equals(task2);
         var result2 = task3.equals(task4);
         var result3 = task4.equals(task5);
+        var result4 = task5.equals(task6);
 
         // Assert
         assertFalse(result1);
         assertTrue(result2);
         assertTrue(result3);
+        assertTrue(result4);
     }
 
     @Test
@@ -229,15 +255,23 @@ class TaskTest {
         task4.setMaxPoints(BigDecimal.TWO);
         task5.setStatus(TaskStatus.DRAFT);
 
+        var task6 = new TaskTestEntity();
+        task6.setId(1L);
+        task4.setMaxPoints(BigDecimal.TWO);
+        task6.setStatus(TaskStatus.DRAFT);
+        task6.setTaskGroup(new TaskGroupTestEntity());
+
         // Act
         var result1 = task1.hashCode() == task2.hashCode();
         var result2 = task3.hashCode() == task4.hashCode();
         var result3 = task4.hashCode() == task5.hashCode();
+        var result4 = task5.hashCode() == task6.hashCode();
 
         // Assert
         assertTrue(result1);
         assertTrue(result2);
         assertTrue(result3);
+        assertTrue(result4);
     }
 
     @Test
@@ -260,6 +294,7 @@ class TaskTest {
         task.setId(1L);
         task.setMaxPoints(BigDecimal.TWO);
         task.setStatus(TaskStatus.DRAFT);
+        task.setTaskGroup(new TaskGroupTestEntity());
 
         // Act
         var result = task.toString();
@@ -268,17 +303,20 @@ class TaskTest {
         assertEquals("TaskTestEntity[id=1]", result);
     }
 
-    private static class TaskTestEntity extends BaseTask {
+    private static class TaskTestEntity extends BaseTaskInGroup<TaskGroupTestEntity> {
         public TaskTestEntity() {
         }
 
-        public TaskTestEntity(BigDecimal maxPoints, TaskStatus status) {
-            super(maxPoints, status);
+        public TaskTestEntity(BigDecimal maxPoints, TaskStatus status, TaskGroupTestEntity taskGroup) {
+            super(maxPoints, status, taskGroup);
         }
 
-        public TaskTestEntity(Long id, BigDecimal maxPoints, TaskStatus status) {
-            super(id, maxPoints, status);
+        public TaskTestEntity(Long id, BigDecimal maxPoints, TaskStatus status, TaskGroupTestEntity taskGroup) {
+            super(id, maxPoints, status, taskGroup);
         }
+    }
+
+    private static class TaskGroupTestEntity extends BaseTaskGroup {
     }
 
     private static class HibernateProxyTaskTestEntity extends TaskTestEntity implements HibernateProxy {

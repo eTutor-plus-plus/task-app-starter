@@ -1,0 +1,51 @@
+@startuml
+!theme plain
+left to right direction
+
+together {
+    interface TaskGroupController<D, A> {
+        + ResponseEntity<D> get(long)
+        + ResponseEntity<TaskGroupModificationResponseDto> create(long,ModifyTaskGroupDto<A>)
+        + ResponseEntity<TaskGroupModificationResponseDto> update(long,ModifyTaskGroupDto<A>)
+        + ResponseEntity<Void> delete(long)
+    }
+
+    abstract class BaseTaskGroupController<E extends TaskGroup, D, A> {
+        # TaskGroupService<E,A> taskGroupService
+        # <<Create>> BaseTaskGroupController(TaskGroupService<E,A>)
+        # {abstract}D mapToDto(E)
+    }
+}
+
+together {
+    interface TaskController<D, A> {
+        + ResponseEntity<D> get(long)
+        + ResponseEntity<TaskModificationResponseDto> create(long,ModifyTaskDto<A>)
+        + ResponseEntity<TaskModificationResponseDto> update(long,ModifyTaskDto<A>)
+        + ResponseEntity<Void> delete(long)
+    }
+
+    abstract class BaseTaskController<E extends Task, D, A> {
+        # TaskService<E,A> taskService
+        # <<Create>> BaseTaskController(TaskService<E,A>)
+        # {abstract}D mapToDto(E)
+    }
+}
+
+together {
+    interface SubmissionController<A> {
+        + ResponseEntity<Serializable> submit(SubmitSubmissionDto<A>,boolean,boolean)
+        + ResponseEntity<GradingDto> getResult(UUID,int,boolean)
+        + ResponseEntity<Page<SubmissionDto<A>>> getSubmissions(Pageable,String,Long,String,SubmissionMode)
+    }
+
+    abstract class BaseSubmissionController<A> {
+        # SubmissionService<A> submissionService
+        # <<Create>> BaseSubmissionController(SubmissionService<A>)
+    }
+}
+
+SubmissionController <|.. BaseSubmissionController
+TaskGroupController <|.. BaseTaskGroupController
+TaskController <|.. BaseTaskController
+@enduml
