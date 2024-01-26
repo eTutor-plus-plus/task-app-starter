@@ -1,0 +1,12 @@
+@startuml
+!theme plain
+hide empty methods
+hide empty attributes
+
+interface JpaRepository<T, K>
+interface JpaSpecificationExecutor<T>
+
+interface TaskGroupRepository<T extends TaskGroup> extends JpaRepository
+interface SubmissionRepository<T extends Submission> extends JpaRepository, JpaSpecificationExecutor
+interface TaskRepository<T extends Task> extends JpaRepository
+@enduml

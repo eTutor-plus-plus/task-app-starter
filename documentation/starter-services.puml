@@ -1,0 +1,80 @@
+@startuml
+!theme plain
+
+together {
+    interface TaskGroupService<G extends TaskGroup, S> {
+        + Optional<G> get(long)
+        + TaskGroupModificationResponseDto create(long,ModifyTaskGroupDto<S>)
+        + TaskGroupModificationResponseDto update(long,ModifyTaskGroupDto<S>)
+        + void delete(long)
+    }
+
+    abstract class BaseTaskGroupService<G extends TaskGroup, S> {
+        # {static} Logger LOG
+        # TaskGroupRepository<G> repository
+        # <<Create>> BaseTaskGroupService(TaskGroupRepository<G>)
+        # {abstract}G createTaskGroup(long,ModifyTaskGroupDto<S>)
+        # {abstract}void updateTaskGroup(G,ModifyTaskGroupDto<S>)
+        # TaskGroupModificationResponseDto mapToReturnData(G,boolean)
+        # void beforeCreate(G)
+        # void afterCreate(G)
+        # void afterUpdate(G)
+        # void beforeDelete(long)
+        # void afterDelete(long)
+    }
+}
+
+together {
+    interface TaskService<T, S> {
+        + Optional<T> get(long)
+        + TaskModificationResponseDto create(long,ModifyTaskDto<S>)
+        + TaskModificationResponseDto update(long,ModifyTaskDto<S>)
+        + void delete(long)
+    }
+
+    abstract class BaseTaskService<T, S> {
+        # {static} Logger LOG
+        # TaskRepository<T> repository
+        # <<Create>> BaseTaskService(TaskRepository<T>)
+        # {abstract}T createTask(long,ModifyTaskDto<S>)
+        # {abstract}void updateTask(T,ModifyTaskDto<S>)
+        # TaskModificationResponseDto mapToReturnData(T,boolean)
+        # void beforeCreate(T)
+        # void afterCreate(T)
+        # void afterUpdate(T)
+        # void beforeDelete(long)
+        # void afterDelete(long)
+    }
+
+    abstract class BaseTaskInGroupService<T, G, S> extends BaseTaskService {
+        # TaskGroupRepository<G> taskGroupRepository
+        # <<Create>> BaseTaskInGroupService(TaskRepository<T>,TaskGroupRepository<G>)
+    }
+}
+
+together {
+    interface SubmissionService<U> {
+        + UUID enqueue(SubmitSubmissionDto<U>)
+        + GradingResultDto execute(SubmitSubmissionDto<U>,boolean)
+        + GradingDto getEvaluationResult(UUID)
+        + Page<SubmissionDto<U>> getSubmissions(Pageable,String,Long,String,SubmissionMode)
+        + void delete(UUID)
+    }
+
+    abstract class BaseSubmissionService<U> {
+        # {static} Logger LOG
+        # SubmissionRepository<S> submissionRepository
+        # TaskRepository<T> taskRepository
+        # <<Create>> BaseSubmissionService(SubmissionRepository<S>,TaskRepository<T>)
+        # {abstract}S createSubmissionEntity(SubmitSubmissionDto<U>)
+        # {abstract}GradingDto evaluate(SubmitSubmissionDto<U>)
+        # Specification<S> getFilterSpecification(String,Long,String,SubmissionMode)
+        # SubmissionDto<U> mapSubmissionToDto(S)
+        # {abstract}U mapSubmissionToSubmissionData(S)
+    }
+}
+
+TaskService <|.. BaseTaskService
+SubmissionService <|.. BaseSubmissionService
+TaskGroupService <|.. BaseTaskGroupService
+@enduml
