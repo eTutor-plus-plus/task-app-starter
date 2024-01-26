@@ -8,6 +8,8 @@ import java.util.UUID;
 
 /**
  * Repository for entity {@link Submission}.
+ *
+ * @param <S> The submission type.
  */
 public interface SubmissionRepository<S extends Submission<?>> extends JpaRepository<S, UUID>, JpaSpecificationExecutor<S> {
 }

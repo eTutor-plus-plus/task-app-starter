@@ -23,9 +23,9 @@ import org.springframework.security.web.header.writers.XXssProtectionHeaderWrite
 
 /**
  * Base class for security configuration.
- * <p/>
+ * <p>
  * Override this class and add the {@link org.springframework.context.annotation.Configuration} annotation to the subclass.
- * <p/>
+ * <p>
  * This class configures the following:
  * <ul>
  *     <li>CSRF protection is disabled</li>

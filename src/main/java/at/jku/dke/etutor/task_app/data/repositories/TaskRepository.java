@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * Repository for entity {@link Task}.
+ *
+ * @param <T> The task type.
  */
 public interface TaskRepository<T extends Task> extends JpaRepository<T, Long>  {
 }
