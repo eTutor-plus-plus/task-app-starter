@@ -8,6 +8,13 @@
 
     <name>eTutor Task-App Starter</name>
     <description>Spring Boot starter for eTutor Task-App applications.</description>
+    <url>https://github.com/eTutor-plus-plus/task-app-starter</url>
+
+    <scm>
+        <connection>scm:git:git://github.com/eTutor-plus-plus/task-app-starter.git</connection>
+        <developerConnection>scm:git:ssh://github.com:eTutor-plus-plus/task-app-starter.git</developerConnection>
+        <url>https://github.com/eTutor-plus-plus/task-app-starter/tree/main</url>
+    </scm>
 
     <distributionManagement>
         <repository>
