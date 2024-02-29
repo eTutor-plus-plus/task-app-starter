@@ -687,11 +687,11 @@ components:
           description: The feedback level.
           format: int32
         submission:
-          description: The submission of the user.
+          description: The submission of the user. If the submission consists only of a string, then this object should contain a single property with the key <code>input</code> and the value of the submission as the property value. This ensures it can easily be tested in Task administration UI.
           type: object
           additionalProperties: true
           example:
-            solution: SELECT * FROM student;
+            input: SELECT * FROM student;
     SubmissionResult:
       required:
         - grading

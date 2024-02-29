@@ -2,4 +2,13 @@ blank_issues_enabled: true
 contact_links:
   - name: Contribution Details
     url: https://github.com/eTutor-plus-plus/task-app-starter/blob/main/CONTRIBUTING.md
-    about: Before opening a new issue, please make sure to read CONTRIBUTING.md
+    about: Before opening a new issue, please make sure to read CONTRIBUTING.md.
+  - name: Documentation
+    url: https://github.com/eTutor-plus-plus/task-app-starter/blob/main/documentation/USAGE.md
+    about: Before opening a new issue, please make sure to read the documentation.
+  - name: JavaDoc
+    url: https://etutor-plus-plus.github.io/task-app-starter/
+    about: Before opening a new issue, please make sure to read the JavaDoc.
+  - name: API Contract
+    url: https://etutor-plus-plus.github.io/task-app-starter/api.html
+    about: Before opening a new issue, please make sure to read the REST API documentation.

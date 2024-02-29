@@ -70,6 +70,8 @@ public abstract class BaseSecurityConfig {
         http.authorizeHttpRequests(reg -> {
             reg.requestMatchers(HttpMethod.OPTIONS).permitAll();
 
+            additionalHttpRequestAuthorizationCustomization(reg);
+
             reg.requestMatchers("/actuator/health").permitAll();
             reg.requestMatchers("/actuator/health/liveness").permitAll();
             reg.requestMatchers("/actuator/health/readiness").permitAll();
@@ -78,7 +80,6 @@ public abstract class BaseSecurityConfig {
 
             reg.requestMatchers("/api/**").authenticated();
 
-            additionalHttpRequestAuthorizationCustomization(reg);
             reg.anyRequest().permitAll();
         });
 
