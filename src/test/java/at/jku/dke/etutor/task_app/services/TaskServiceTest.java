@@ -8,6 +8,7 @@ import at.jku.dke.etutor.task_app.data.repositories.TaskRepository;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
 import at.jku.dke.etutor.task_app.dto.TaskStatus;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -75,6 +76,22 @@ class TaskServiceTest {
         assertFalse(service.beforeCreateCalled instanceof PersistedEntity);
         assertInstanceOf(PersistedEntity.class, service.afterCreateCalled);
     }
+    @Test
+    void testCreateNullGroupId() {
+        // Act
+        final long id = 4L;
+        final TaskStatus taskStatus = TaskStatus.APPROVED;
+        final String someData = "some data";
+        final BigDecimal maxPoints = BigDecimal.TEN;
+
+        var service = new TaskServiceImpl();
+        var dto = new ModifyTaskDto<>(null, maxPoints, "test", taskStatus, new AdditionalData(someData));
+        when(service.getRepository().existsById(id)).thenReturn(false);
+        when(service.getRepository().save(any())).thenAnswer(invocation -> new PersistedEntity(invocation.getArgument(0)));
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> service.create(id, dto));
+    }
 
     @Test
     void testCreateAlreadyExists() {
@@ -113,6 +130,21 @@ class TaskServiceTest {
         assertEquals(dto.taskGroupId(), entity.getTaskGroup().getId());
         assertEquals(dto.additionalData().someData(), entity.getSomeData());
         assertInstanceOf(PersistedEntity.class, service.afterUpdateCalled);
+    }
+
+    @Test
+    void testUpdateNullGroupId() {
+        // Act
+        final long id = 3L;
+
+        var service = new TaskServiceImpl();
+        var dto = new ModifyTaskDto<>(null, BigDecimal.TEN, "test", TaskStatus.APPROVED, new AdditionalData("some data"));
+        var entity = new TaskEntity(id, TaskStatus.DRAFT, new TaskGroupEntity(1L), "old data", BigDecimal.TWO);
+        when(service.getRepository().findById(id)).thenReturn(Optional.of(entity));
+        when(service.getRepository().save(any())).thenAnswer(invocation -> new PersistedEntity(invocation.getArgument(0)));
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> service.update(id, dto));
     }
 
     @Test
@@ -160,7 +192,7 @@ class TaskServiceTest {
     //#endregion
 
     @Test
-    void testAuthorities() throws NoSuchMethodException {
+    void testAuthorities() {
         var cls = BaseTaskService.class.getAnnotation(PreAuthorize.class);
         assertEquals(AuthConstants.CRUD_AUTHORITY, cls.value());
     }
