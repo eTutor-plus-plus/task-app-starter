@@ -1,0 +1,34 @@
+@startuml
+!theme plain
+hide circle
+hide methods
+
+class task_group {
+    id: BIGINT <<PK>>
+    status: TASK_STATUS
+    ... custom columns
+}
+
+class task {
+    id: BIGINT <<PK>>
+    max_points: NUMERIC
+    status: TASK_STATUS
+    ... custom columns
+}
+
+class submission {
+    id: BIGINT <<PK>>
+    user_id: VARCHAR
+    assignment_id: VARCHAR
+    task_id: BIGINT
+    submission_time: TIMESTAMP
+    language: VARCHAR
+    mode: SUBMISSION_MODE
+    feedback_level: INT
+    evaluation_result: JSON
+    ... custom columns
+}
+
+task "*" -- "0..1" task_group
+task "*" -- "*" submission
+@enduml

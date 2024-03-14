@@ -22,7 +22,7 @@ import java.math.BigDecimal;
  */
 @Schema(description = "Data for creating and updating tasks")
 public record ModifyTaskDto<T>(
-    @Schema(description = "The task group identifier.", example = "445") @NotNull Long taskGroupId,
+    @Schema(description = "The task group identifier.", example = "445") Long taskGroupId,
     @Schema(description = "The maximum achievable points.", example = "10") @NotNull @PositiveOrZero BigDecimal maxPoints,
     @Schema(description = "The task type. If a task app supports more than one task type, this can be used to distinguish between types.", example = "sql", examples = {"sql", "datalog"}) @NotEmpty @Size(max = 100) String taskType,
     @Schema(description = "The task status.") @NotNull TaskStatus status,

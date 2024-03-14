@@ -25,18 +25,6 @@ class ModifyTaskDtoTest {
     }
 
     @Test
-    void testTaskGroupIdNullValidation() {
-        // Arrange
-        var dto = new ModifyTaskDto<>(null, BigDecimal.TEN, "test", TaskStatus.DRAFT, "");
-
-        // Act
-        var violations = this.validator.validate(dto);
-
-        // Assert
-        assertEquals(1, violations.size());
-    }
-
-    @Test
     void testMaxPointsNullValidation() {
         // Arrange
         var dto = new ModifyTaskDto<>(1L, null, "test", TaskStatus.DRAFT, "");

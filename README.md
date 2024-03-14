@@ -74,4 +74,4 @@ This is also required if you want to use the latest snapshot version.
 
 ## Development
 
-See [CONTRIBUTING.md](CONTRIBUTING.md), [USAGE.md](documentation/USAGE.md) and [TUTORIAL.md](documentation/TUTORIAL.md) for details.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Wiki](https://github.com/eTutor-plus-plus/task-app-starter/wiki) for details.

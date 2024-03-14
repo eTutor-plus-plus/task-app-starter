@@ -6,6 +6,7 @@ import at.jku.dke.etutor.task_app.data.entities.TaskInGroup;
 import at.jku.dke.etutor.task_app.data.repositories.TaskGroupRepository;
 import at.jku.dke.etutor.task_app.data.repositories.TaskRepository;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
+import jakarta.validation.ValidationException;
 
 /**
  * This class provides methods for managing {@link Task}s.
@@ -34,11 +35,15 @@ public abstract class BaseTaskInGroupService<T extends TaskInGroup<G>, G extends
 
     @Override
     final void beforeCreateInternal(T task, ModifyTaskDto<S> dto) {
+        if (dto.taskGroupId() == null)
+            throw new ValidationException("Task group id is required.");
         task.setTaskGroup(this.taskGroupRepository.getReferenceById(dto.taskGroupId()));
     }
 
     @Override
     final void updateInternal(T task, ModifyTaskDto<S> dto) {
+        if (dto.taskGroupId() == null)
+            throw new ValidationException("Task group id is required.");
         task.setTaskGroup(this.taskGroupRepository.getReferenceById(dto.taskGroupId()));
     }
 

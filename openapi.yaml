@@ -15,7 +15,7 @@ info:
         <li><em>SUBMIT</em>: Submit submissions</li>
         <li><em>READ_SUBMISSION</em>: Read persisted submissions</li>
     </ul>
-  version: 1.0.0
+  version: 1.1.0
 tags:
   - name: TaskGroup
     description: Manage task groups
@@ -23,6 +23,8 @@ tags:
     description: Manage tasks
   - name: Submission
     description: Manage submissions
+  - name: Health
+    description: Monitor application health
 paths:
   /api/taskGroup/{id}:
     get:
@@ -511,6 +513,89 @@ paths:
           description: Submission not found
         '408':
           description: Result is not yet available, try again later
+  /actuator:
+    get:
+      tags:
+        - Health
+      summary: Provides available health endpoints
+      description: >-
+        Returns the available health endpoints. This is a <em>required</em>
+        endpoint.
+      operationId: links
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _links:
+                    type: object
+                    additionalProperties:
+                      $ref: '#/components/schemas/Link'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Operation not allowed
+  /actuator/logfile:
+    get:
+      tags:
+        - Health
+      summary: Provide application logfile
+      description: >-
+        Returns the application logfile. Requires the <code>CRUD</code> role.
+        This is an <em>optional</em> endpoint.
+      operationId: logfile
+      responses:
+        '200':
+          description: Log file contents
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Operation not allowed
+  /actuator/info:
+    get:
+      tags:
+        - Health
+      summary: Provide application information.
+      description: >-
+        Returns some information about the application. Requires the <code>CRUD</code> role.
+        This is an <em>optional</em> endpoint.
+      operationId: info
+      responses:
+        '200':
+          description: Application build and runtime information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationInformation'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Operation not allowed
+  /actuator/health:
+    get:
+      tags:
+        - Health
+      summary: Provides application health information
+      description: >-
+        Returns the health information of the application. This is a
+        <em>required</em> endpoint. If not authenticated, the server should only return
+        the "status"-property. If authenticated, the server may also return health details
+        of the components.
+      operationId: health
+      responses:
+        '200':
+          description: Application health
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthInformation'
 components:
   schemas:
     TaskGroup:
@@ -860,6 +945,122 @@ components:
           additionalProperties: true
           example:
             solution: SELECT * FROM student;
+    ApplicationInformation:
+      description: Information about the application
+      type: object
+      additionalProperties: true
+      properties:
+        git:
+          type: object
+          properties:
+            dirty:
+              description: Whether the git repository was dirty on build.
+              type: boolean
+            branch:
+              description: The git branch.
+              type: string
+              example: main
+            commit:
+              description: The git commit hash.
+              type: object
+              properties:
+                id:
+                  description: The git commit hash.
+                  type: object
+                  properties:
+                    abbrev:
+                      description: The abbreviated commit hash.
+                      type: string
+                      example: 060b9f6
+                    full:
+                      description: The full commit hash.
+                      type: string
+                      example: 060b9f638044f8c1e46de002f5bc287beaecc56d
+                time:
+                  description: The commit time.
+                  type: string
+                  format: date-time
+        build:
+          description: The build information.
+          type: object
+          additionalProperties: true
+          properties:
+            version:
+              description: The application version.
+              type: string
+              example: 1.1.0
+            time:
+              description: The build time.
+              type: string
+              format: date-time
+            name:
+              description: The application name.
+              type: string
+              example: eTutor Task-App
+        os:
+          type: object
+          description: The operating system information.
+          properties:
+            name:
+              description: The operating system name.
+              type: string
+              example: Linux
+            version:
+              description: The operating system version.
+              type: string
+              example: 6.6.16-linuxkit
+            arch:
+              description: The operating system architecture.
+              type: string
+              example: aarch64
+    HealthInformation:
+      type: object
+      description: The health information of the application.
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: The health status of the application.
+          enum:
+            - UP
+            - DOWN
+            - OUT_OF_SERVICE
+            - UNKNOWN
+        components:
+          type: object
+          description: The health details of the components. Only available if authenticated.
+          additionalProperties:
+            $ref: '#/components/schemas/HealthComponent'
+    HealthComponent:
+      type: object
+      description: The health details of a component.
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: The health status of the component.
+          enum:
+            - UP
+            - DOWN
+            - OUT_OF_SERVICE
+            - UNKNOWN
+        details:
+          type: object
+          description: The health details of the component.
+          additionalProperties: true
+        components:
+          type: object
+          description: The health details of the sub-components.
+          additionalProperties:
+            $ref: '#/components/schemas/HealthComponent'
+    Link:
+      type: object
+      properties:
+        href:
+          description: The URL of the link.
+          type: string
   securitySchemes:
     api_key:
       description: Authentication with API Key

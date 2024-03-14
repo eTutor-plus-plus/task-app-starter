@@ -4,7 +4,7 @@
 
     <groupId>at.jku.dke.etutor</groupId>
     <artifactId>etutor-task-app-starter</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
 
     <name>eTutor Task-App Starter</name>
     <description>Spring Boot starter for eTutor Task-App applications.</description>
@@ -16,20 +16,6 @@
         <url>https://github.com/eTutor-plus-plus/task-app-starter/tree/main</url>
     </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub eTutor Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/eTutor-plus-plus/task-app-starter</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </distributionManagement>
-
     <properties>
         <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -38,7 +24,7 @@
 
         <spring.version>6.1.4</spring.version>
         <spring-boot.version>3.2.3</spring-boot.version>
-        <springdoc.version>2.3.0</springdoc.version>
+        <springdoc.version>2.4.0</springdoc.version>
         <jakarta-servlet.version>6.0.0</jakarta-servlet.version>
     </properties>
 
@@ -151,6 +137,29 @@
                     </tags>
                     <bottom>Copyright © {currentYear} Department for Business Informatics - Data and Knowledge Engineering. All rights reserved.</bottom>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Source -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-source</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Git Hooks -->
