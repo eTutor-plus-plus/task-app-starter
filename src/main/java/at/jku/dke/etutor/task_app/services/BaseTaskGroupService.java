@@ -80,9 +80,9 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
         taskGroup.setId(id);
         taskGroup.setStatus(dto.status());
 
-        this.beforeCreate(taskGroup);
+        this.beforeCreate(taskGroup, dto);
         taskGroup = this.repository.save(taskGroup);
-        this.afterCreate(taskGroup);
+        this.afterCreate(taskGroup, dto);
 
         return this.mapToReturnData(taskGroup, true);
     }
@@ -105,7 +105,7 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
         this.updateTaskGroup(taskGroup, dto);
 
         taskGroup = this.repository.save(taskGroup);
-        this.afterUpdate(taskGroup);
+        this.afterUpdate(taskGroup, dto);
 
         return this.mapToReturnData(taskGroup, false);
     }
@@ -160,8 +160,9 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      * Called before the task group is stored in the database.
      *
      * @param taskGroup The task group to create.
+     * @param dto       The new task group data.
      */
-    protected void beforeCreate(G taskGroup) {
+    protected void beforeCreate(G taskGroup, ModifyTaskGroupDto<S> dto) {
     }
 
     /**
@@ -170,8 +171,9 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      * This method runs in the same transaction as the calling method.
      *
      * @param taskGroup The created task group.
+     * @param dto       The new task group data.
      */
-    protected void afterCreate(G taskGroup) {
+    protected void afterCreate(G taskGroup, ModifyTaskGroupDto<S> dto) {
     }
 
     /**
@@ -180,8 +182,9 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      * This method runs in the same transaction as the calling method.
      *
      * @param taskGroup The updated taskGroup.
+     * @param dto       The new task group data.
      */
-    protected void afterUpdate(G taskGroup) {
+    protected void afterUpdate(G taskGroup, ModifyTaskGroupDto<S> dto) {
     }
 
     /**

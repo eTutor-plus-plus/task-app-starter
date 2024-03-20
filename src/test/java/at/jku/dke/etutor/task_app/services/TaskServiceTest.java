@@ -231,17 +231,17 @@ class TaskServiceTest {
         }
 
         @Override
-        protected void beforeCreate(TaskEntity task) {
+        protected void beforeCreate(TaskEntity task, ModifyTaskDto<AdditionalData> dto) {
             this.beforeCreateCalled = task;
         }
 
         @Override
-        protected void afterCreate(TaskEntity task) {
+        protected void afterCreate(TaskEntity task, ModifyTaskDto<AdditionalData> dto) {
             this.afterCreateCalled = task;
         }
 
         @Override
-        protected void afterUpdate(TaskEntity task) {
+        protected void afterUpdate(TaskEntity task, ModifyTaskDto<AdditionalData> dto) {
             this.afterUpdateCalled = task;
         }
 

@@ -186,17 +186,17 @@ class TaskGroupServiceTest {
         }
 
         @Override
-        protected void beforeCreate(TaskGroupEntity taskGroup) {
+        protected void beforeCreate(TaskGroupEntity taskGroup, ModifyTaskGroupDto<AdditionalData> dto) {
             this.beforeCreateCalled = taskGroup;
         }
 
         @Override
-        protected void afterCreate(TaskGroupEntity taskGroup) {
+        protected void afterCreate(TaskGroupEntity taskGroup, ModifyTaskGroupDto<AdditionalData> dto) {
             this.afterCreateCalled = taskGroup;
         }
 
         @Override
-        protected void afterUpdate(TaskGroupEntity taskGroup) {
+        protected void afterUpdate(TaskGroupEntity taskGroup, ModifyTaskGroupDto<AdditionalData> dto) {
             this.afterUpdateCalled = taskGroup;
         }
 
