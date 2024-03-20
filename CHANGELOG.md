@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.0](https://github.com/eTutor-plus-plus/task-app-starter/compare/v0.0.7...v1.1.0) (2024-03-20)
+
+
+### Features
+
+* Added simple submission load test service ([23b0678](https://github.com/eTutor-plus-plus/task-app-starter/commit/23b0678340ca3faba8264a76660515628fdc4274))
+
+
+### Bug Fixes
+
+* Add DTOs to service hook methods ([3f7e461](https://github.com/eTutor-plus-plus/task-app-starter/commit/3f7e46165223dc7e49654eaaaa53318cc28842e6))
+
 ## 1.0.0 (2024-03-14)
 
 

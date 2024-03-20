@@ -82,9 +82,9 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
         task.setMaxPoints(dto.maxPoints());
         this.beforeCreateInternal(task, dto);
 
-        this.beforeCreate(task);
+        this.beforeCreate(task, dto);
         task = this.repository.save(task);
-        this.afterCreate(task);
+        this.afterCreate(task, dto);
 
         return this.mapToReturnData(task, true);
     }
@@ -109,7 +109,7 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
         this.updateTask(task, dto);
 
         task = this.repository.save(task);
-        this.afterUpdate(task);
+        this.afterUpdate(task, dto);
 
         return this.mapToReturnData(task, false);
     }
@@ -175,7 +175,7 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
      * Only available for internal classes.
      *
      * @param task The task to update.
-     * @param dto The task data.
+     * @param dto  The task data.
      */
     void updateInternal(T task, ModifyTaskDto<S> dto) {
     }
@@ -184,8 +184,9 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
      * Called before the task is stored in the database.
      *
      * @param task The task to create.
+     * @param dto  The task data.
      */
-    protected void beforeCreate(T task) {
+    protected void beforeCreate(T task, ModifyTaskDto<S> dto) {
     }
 
     /**
@@ -194,8 +195,9 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
      * This method runs in the same transaction as the calling method.
      *
      * @param task The created task.
+     * @param dto  The task data.
      */
-    protected void afterCreate(T task) {
+    protected void afterCreate(T task, ModifyTaskDto<S> dto) {
     }
 
     /**
@@ -204,8 +206,9 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
      * This method runs in the same transaction as the calling method.
      *
      * @param task The updated task.
+     * @param dto  The task data.
      */
-    protected void afterUpdate(T task) {
+    protected void afterUpdate(T task, ModifyTaskDto<S> dto) {
     }
 
     /**
