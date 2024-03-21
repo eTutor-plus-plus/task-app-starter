@@ -20,12 +20,11 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Controller for managing tasks.
  * <p>
- * Add <code>@RestController</code> to the implementing class.
+ * Add <code>@RestController</code> and <code>@RequestMapping("/api/task")</code> to the implementing class.
  *
  * @param <D> The type of the task DTO.
  * @param <T> The type of the additional data in {@link ModifyTaskDto}.
  */
-@RequestMapping("/api/task")
 @Tag(name = "Task", description = "Manage tasks")
 public interface TaskController<D, T> {
     /**
