@@ -22,12 +22,11 @@ import java.io.Serializable;
 /**
  * Controller for managing task groups.
  * <p>
- * Add <code>@RestController</code> to the implementing class.
+ * Add <code>@RestController</code> and <code>@RequestMapping("/api/taskGroup")</code> to the implementing class.
  *
  * @param <D> The type of the task group DTO.
  * @param <T> The type of the additional data in {@link at.jku.dke.etutor.task_app.dto.ModifyTaskGroupDto}.
  */
-@RequestMapping("/api/taskGroup")
 @Tag(name = "Task Group", description = "Manage task groups")
 public interface TaskGroupController<D, T> {
     /**

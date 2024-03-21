@@ -2,16 +2,13 @@ package at.jku.dke.etutor.task_app.controllers;
 
 import at.jku.dke.etutor.task_app.data.entities.Task;
 import at.jku.dke.etutor.task_app.dto.ModifyTaskDto;
-import at.jku.dke.etutor.task_app.dto.TaskModificationResponseDto;
 import at.jku.dke.etutor.task_app.services.TaskService;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.net.URI;
-import java.util.Optional;
 
 /**
- * Base implementation of {@link TaskController}.
+ * Base implementation of {@link TaskController} with predefined request mapping base.
  * <p>
  * Add <code>@RestController</code> to the extending class.
  *
@@ -19,12 +16,8 @@ import java.util.Optional;
  * @param <D> The type of the task DTO.
  * @param <A> The type of the additional data in {@link ModifyTaskDto}.
  */
-public abstract class BaseTaskController<E extends Task, D, A> implements TaskController<D, A> {
-
-    /**
-     * The task group service.
-     */
-    protected final TaskService<E, A> taskService;
+@RequestMapping("/api/task")
+public abstract class BaseTaskController<E extends Task, D, A> extends BaseTaskControllerWithoutRequestMapping<E, D, A> {
 
     /**
      * Creates a new instance of class {@link BaseTaskController}.
@@ -32,56 +25,11 @@ public abstract class BaseTaskController<E extends Task, D, A> implements TaskCo
      * @param taskService The task group service.
      */
     protected BaseTaskController(TaskService<E, A> taskService) {
-        this.taskService = taskService;
+        super(taskService);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public ResponseEntity<D> get(long id) {
-        Optional<E> entity = this.taskService.get(id);
-        return entity
-            .map(this::mapToDto)
-            .map(ResponseEntity::ok)
-            .orElseThrow(() -> new EntityNotFoundException(String.format("Task %s does not exist.", id)));
+    protected URI createDetailsUri(long id) {
+        return URI.create("/api/task/" + id);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ResponseEntity<TaskModificationResponseDto> create(long id, ModifyTaskDto<A> dto) {
-        TaskModificationResponseDto created = this.taskService.create(id, dto);
-        return ResponseEntity
-            .created(URI.create("/api/task/" + id))
-            .body(created);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ResponseEntity<TaskModificationResponseDto> update(long id, ModifyTaskDto<A> dto) {
-        TaskModificationResponseDto updated = this.taskService.update(id, dto);
-        return ResponseEntity.ok(updated);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ResponseEntity<Void> delete(long id) {
-        this.taskService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Maps the given task group to a DTO.
-     *
-     * @param entity The task group entity.
-     * @return The DTO.
-     */
-    protected abstract D mapToDto(E entity);
-
 }

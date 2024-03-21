@@ -176,6 +176,7 @@ public abstract class SubmissionThread extends Thread {
      * Builds the type-specific submission data JSON for the submit request.
      *
      * @param iteration The iteration number.
+     * @param taskId    The task identifier.
      * @return The additional data JSON.
      */
     protected abstract String buildAdditionalDataJson(int iteration, long taskId);

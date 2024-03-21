@@ -7,7 +7,7 @@ on:
     branches:
       - develop
     paths:
-      - CHANGELOG.md
+      - package.json
 
 # Sets permissions
 permissions:

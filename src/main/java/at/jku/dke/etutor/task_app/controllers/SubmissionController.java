@@ -25,11 +25,10 @@ import java.util.UUID;
 /**
  * Controller for managing submissions.
  * <p>
- * Add <code>@RestController</code> to the implementing class.
+ * Add <code>@RestController</code> and <code>@RequestMapping("/api/submission")</code> to the implementing class.
  *
  * @param <T> The type of the additional data in {@link SubmitSubmissionDto}.
  */
-@RequestMapping("/api/submission")
 @Tag(name = "Submission", description = "Manage submissions")
 public interface SubmissionController<T> {
     /**
