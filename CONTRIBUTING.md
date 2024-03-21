@@ -156,12 +156,11 @@ New releases can only be published by repository owners.
 In order to release a new version you have to conduct following steps:
 
 1. Run `npm install` if you have not done that so far.
-2. In the `develop` branch, run `npm run release -- --no-verify [--sign] [--prerelease beta] [--dry-run]`
+2. Run `git fetch --tags` and `git pull origin main` to make sure you have loaded all tags.
+3. In the `develop` branch, run `npm run release -- --no-verify [--sign] [--prerelease beta] [--dry-run]`
     * Use `--sign` if you have configured a GPG key
     * Use `--prerelease XXX` to publish a prerelease (beta or alpha).
     * Use `--dry-run` to perform a dry run without any changes.
-3. Delete the created tag (e.g. `git tag -d v2.0.0`). This is necessary because the tag is created by the release script, but we want the tag in the main branch, not the develop
-   branch.
 4. Push the changes to the `develop` branch.
     * The GitHub Action `Release Library` automatically creates a new pull-request.
 5. Merge the PR into the main branch.
