@@ -182,6 +182,8 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
 
     /**
      * Called before the task is stored in the database.
+     * <p>
+     * Override this method to perform additional actions before creating the task.
      *
      * @param task The task to create.
      * @param dto  The task data.
@@ -193,6 +195,7 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
      * Called after the task is stored in the database.
      * <p>
      * This method runs in the same transaction as the calling method.
+     * Override this method to perform additional actions after creating the task.
      *
      * @param task The created task.
      * @param dto  The task data.
@@ -204,6 +207,7 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
      * Called after the task is updated in the database.
      * <p>
      * This method runs in the same transaction as the calling method.
+     * Override this method to perform additional actions after updating the task.
      *
      * @param task The updated task.
      * @param dto  The task data.
@@ -213,6 +217,8 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
 
     /**
      * Called before the task with the specified identifier is deleted.
+     * <p>
+     * Override this method to perform additional actions before deleting the task.
      *
      * @param id The identifier of the task to delete.
      */
@@ -223,6 +229,7 @@ public abstract class BaseTaskService<T extends Task, S> implements TaskService<
      * Called after the task with the specified identifier is deleted.
      * <p>
      * This method runs in the same transaction as the calling method.
+     * Override this method to perform additional actions after deleting the task.
      *
      * @param id The identifier of the deleted task.
      */
