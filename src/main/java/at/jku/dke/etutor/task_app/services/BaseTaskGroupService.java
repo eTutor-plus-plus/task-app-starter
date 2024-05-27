@@ -158,6 +158,8 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
 
     /**
      * Called before the task group is stored in the database.
+     * <p>
+     * Override this method to perform additional actions before creating the task group.
      *
      * @param taskGroup The task group to create.
      * @param dto       The new task group data.
@@ -169,6 +171,7 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      * Called after the task group is stored in the database.
      * <p>
      * This method runs in the same transaction as the calling method.
+     * Override this method to perform additional actions after creating the task group.
      *
      * @param taskGroup The created task group.
      * @param dto       The new task group data.
@@ -180,6 +183,7 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      * Called after the task group is updated in the database.
      * <p>
      * This method runs in the same transaction as the calling method.
+     * Override this method to perform additional actions after updating the task group.
      *
      * @param taskGroup The updated taskGroup.
      * @param dto       The new task group data.
@@ -189,6 +193,8 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
 
     /**
      * Called before the task group with the specified identifier is deleted.
+     * <p>
+     * Override this method to perform additional actions before deleting the task group.
      *
      * @param id The identifier of the task group to delete.
      */
@@ -199,6 +205,7 @@ public abstract class BaseTaskGroupService<G extends TaskGroup, S> implements Ta
      * Called after the task group with the specified identifier is deleted.
      * <p>
      * This method runs in the same transaction as the calling method.
+     * Override this method to perform additional actions after deleting the task group.
      *
      * @param id The identifier of the deleted task group.
      */

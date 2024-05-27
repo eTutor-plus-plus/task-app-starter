@@ -10,10 +10,15 @@ together {
         + ResponseEntity<Void> delete(long)
     }
 
-    abstract class BaseTaskGroupController<E extends TaskGroup, D, A> {
+    abstract class BaseTaskGroupControllerWithoutRequestMapping<E extends TaskGroup, D, A> {
         # TaskGroupService<E,A> taskGroupService
-        # <<Create>> BaseTaskGroupController(TaskGroupService<E,A>)
+        # <<Create>> BaseTaskGroupControllerWithoutRequestMapping(TaskGroupService<E,A>)
         # {abstract}D mapToDto(E)
+        # {abstract}URI createDetailsUri(long)
+    }
+
+    abstract class BaseTaskGroupController<E extends TaskGroup, D, A> {
+        # <<Create>> BaseTaskGroupController(TaskGroupService<E,A>)
     }
 }
 
@@ -25,10 +30,15 @@ together {
         + ResponseEntity<Void> delete(long)
     }
 
-    abstract class BaseTaskController<E extends Task, D, A> {
+    abstract class BaseTaskControllerWithoutRequestMapping<E extends Task, D, A> {
         # TaskService<E,A> taskService
-        # <<Create>> BaseTaskController(TaskService<E,A>)
+        # <<Create>> BaseTaskControllerWithoutRequestMapping(TaskService<E,A>)
         # {abstract}D mapToDto(E)
+        # {abstract}URI createDetailsUri(long)
+    }
+
+    abstract class BaseTaskController<E extends Task, D, A> {
+        # <<Create>> BaseTaskController(TaskService<E,A>)
     }
 }
 
@@ -39,13 +49,21 @@ together {
         + ResponseEntity<Page<SubmissionDto<A>>> getSubmissions(Pageable,String,Long,String,SubmissionMode)
     }
 
-    abstract class BaseSubmissionController<A> {
+    abstract class BaseSubmissionControllerWithoutRequestMapping<A> {
         # SubmissionService<A> submissionService
+        # <<Create>> BaseSubmissionControllerWithoutRequestMapping(SubmissionService<A>)
+        # {abstract}URI createDetailsUri(UUID)
+    }
+
+    abstract class BaseSubmissionController<A> {
         # <<Create>> BaseSubmissionController(SubmissionService<A>)
     }
 }
 
-SubmissionController <|.. BaseSubmissionController
-TaskGroupController <|.. BaseTaskGroupController
-TaskController <|.. BaseTaskController
+SubmissionController <|.. BaseSubmissionControllerWithoutRequestMapping
+BaseSubmissionControllerWithoutRequestMapping <|-- BaseSubmissionController
+TaskGroupController <|.. BaseTaskGroupControllerWithoutRequestMapping
+BaseTaskGroupControllerWithoutRequestMapping <|-- BaseTaskGroupController
+TaskController <|.. BaseTaskControllerWithoutRequestMapping
+BaseTaskControllerWithoutRequestMapping <|-- BaseTaskController
 @enduml

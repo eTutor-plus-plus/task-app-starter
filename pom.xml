@@ -4,7 +4,7 @@
 
     <groupId>at.jku.dke.etutor</groupId>
     <artifactId>etutor-task-app-starter</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
 
     <name>eTutor Task-App Starter</name>
     <description>Spring Boot starter for eTutor Task-App applications.</description>
@@ -36,8 +36,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring.version>6.1.6</spring.version>
-        <spring-boot.version>3.2.4</spring-boot.version>
+        <spring.version>6.1.8</spring.version>
+        <spring-boot.version>3.3.0</spring-boot.version>
         <springdoc.version>2.5.0</springdoc.version>
         <jakarta-servlet.version>6.0.0</jakarta-servlet.version>
     </properties>
@@ -98,7 +98,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.4.1</version>
                 <configuration>
                     <archive>
                         <index>true</index>
@@ -154,14 +154,14 @@
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
-                        <goals>
+                        <goals> <!-- Include Javadoc in Jar -->
                             <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- Source -->
+            <!-- Source (include Source Code in Jar) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -180,7 +180,7 @@
             <plugin>
                 <groupId>com.rudikershaw.gitbuildhook</groupId>
                 <artifactId>git-build-hook-maven-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.5.0</version>
                 <configuration>
                     <gitConfig>
                         <core.hooksPath>.git-hooks/</core.hooksPath>

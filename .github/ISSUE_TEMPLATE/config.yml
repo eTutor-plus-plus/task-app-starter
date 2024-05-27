@@ -4,7 +4,7 @@ contact_links:
     url: https://github.com/eTutor-plus-plus/task-app-starter/blob/main/CONTRIBUTING.md
     about: Before opening a new issue, please make sure to read CONTRIBUTING.md.
   - name: Documentation
-    url: https://github.com/eTutor-plus-plus/task-app-starter/blob/main/documentation/USAGE.md
+    url: https://github.com/eTutor-plus-plus/task-app-starter/wiki
     about: Before opening a new issue, please make sure to read the documentation.
   - name: JavaDoc
     url: https://etutor-plus-plus.github.io/task-app-starter/

@@ -10,7 +10,7 @@ Library for eTutor Task Apps.
 
 This library can be used to create a new eTutor Task App with Spring boot.
 It provides classes for API-Key Authentication, basic JPA entities and services and REST controller implementations.
-See [Javadoc](https://eTutor-plus-plus.github.io/task-app-starter/) for more information.
+See [Javadoc](https://eTutor-plus-plus.github.io/task-app-starter/) and [Wiki](https://github.com/eTutor-plus-plus/task-app-starter/wiki) for more information.
 
 ## Usage
 

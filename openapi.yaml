@@ -15,7 +15,7 @@ info:
         <li><em>SUBMIT</em>: Submit submissions</li>
         <li><em>READ_SUBMISSION</em>: Read persisted submissions</li>
     </ul>
-  version: 1.1.0
+  version: 1.1.1
 tags:
   - name: TaskGroup
     description: Manage task groups
@@ -167,8 +167,6 @@ paths:
           description: Unauthorized
         '403':
           description: Operation not allowed
-        '404':
-          description: Task group not found
       security:
         - api_key: [ ]
   /api/task/{id}:
@@ -311,8 +309,6 @@ paths:
           description: Unauthorized
         '403':
           description: Operation not allowed
-        '404':
-          description: Task not found
       security:
         - api_key: [ ]
   /api/submission:
@@ -607,7 +603,7 @@ components:
       example:
         ddl: CREATE TABLE test (id INTEGER);
     ModifyTaskGroup:
-      description: Data for creating and updating task groups
+      description: Data for creating and updating task groups.
       type: object
       required:
         - taskGroupType
@@ -638,16 +634,16 @@ components:
           example:
             ddl: CREATE TABLE test (id INTEGER);
     TaskGroupModificationResponse:
-      description: Response data for creating and updating task groups.
+      description: Response data for creating and updating task groups. The task administration will use this value to set the task group description, if the user did not enter a description.
       type: object
       properties:
         descriptionDe:
           type: string
-          description: The german task group description.
+          description: The german task group description. May be <code>null</code> if generation of task group description is not supported.
           example: "Gesucht ist eine Zahl zwischen 1 und 10."
         descriptionEn:
           type: string
-          description: The english task group description.
+          description: The english task group description. May be <code>null</code> if generation of task group description is not supported.
           example: "We are looking for a number between 1 and 10."
     Task:
       type: object
@@ -664,12 +660,11 @@ components:
         - additionalData
         - maxPoints
         - status
-        - taskGroupId
         - taskType
       properties:
         taskGroupId:
           type: integer
-          description: The task group identifier.
+          description: The task group identifier, if applicable.
           format: int64
           example: 445
         maxPoints:
@@ -705,22 +700,22 @@ components:
       properties:
         descriptionDe:
           type: string
-          description: The german task group description.
+          description: The german task description. May be <code>null</code> if generation of task description is not supported. The task administration will use this value to set the task description, if the user did not enter a description.
           example: "Geben Sie eine Zahl ein."
         descriptionEn:
           type: string
-          description: The english task group description.
+          description: The english task description. May be <code>null</code> if generation of task description is not supported. The task administration will use this value to set the task description, if the user did not enter a description.
           example: "Enter a number."
         difficulty:
           type: number
           format: int32
-          description: The difficulty of the task.
+          description: The difficulty of the task. May be <code>null</code>. If a value is set, the task administration will override the user-specified difficulty with this value. Might be used by task apps to automatically set difficulty based on some metric.
           example: 2
           minimum: 0
           maximum: 3
         maxPoints:
           type: number
-          description: The maximum points.
+          description: The maximum points. May be <code>null</code>. If a value is set, the task administration will override the user-specified maximum points with this value. Might be used by task apps to automatically set maximum points based on some grading scheme.
           example: 25.75
           minimum: 0.01
     Submission:
