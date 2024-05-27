@@ -128,7 +128,7 @@
                     <detectLinks>true</detectLinks>
                     <locale>en</locale>
                     <links>
-                        <link>https://docs.spring.io/spring-boot/docs/current/api/</link>
+                        <link>https://docs.spring.io/spring-boot/api/java/</link>
                         <link>https://docs.spring.io/spring-framework/docs/current/javadoc-api/</link>
                         <link>https://jakarta.ee/specifications/bean-validation/3.0/apidocs/</link>
                     </links>
