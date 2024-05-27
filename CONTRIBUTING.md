@@ -24,7 +24,7 @@ Please make sure to read the relevant section before making your contribution. I
 
 ## I Have a Question
 
-> If you want to ask a question, we assume that you have read the available [Documentation](https://eTutor-plus-plus.github.io/task-app-starter/).
+> If you want to ask a question, we assume that you have read the available [JavaDoc](https://eTutor-plus-plus.github.io/task-app-starter/) and [Wiki](https://github.com/eTutor-plus-plus/task-app-starter/wiki).
 
 Before you ask a question, it is best to search for existing [Issues](https://github.com/eTutor-plus-plus/task-app-starter/issues) that might help you. In case you have found a suitable
 issue and still need clarification, you can write your question in this issue. It is also advisable to search the internet for answers first.
