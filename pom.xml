@@ -39,7 +39,7 @@
         <spring.version>6.1.8</spring.version>
         <spring-boot.version>3.3.0</spring-boot.version>
         <springdoc.version>2.5.0</springdoc.version>
-        <jakarta-servlet.version>6.0.0</jakarta-servlet.version>
+        <jakarta-servlet.version>6.1.0</jakarta-servlet.version>
     </properties>
 
     <dependencies>
