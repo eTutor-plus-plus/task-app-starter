@@ -36,7 +36,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring.version>6.1.9</spring.version>
+        <spring.version>6.1.10</spring.version>
         <spring-boot.version>3.3.1</spring-boot.version>
         <springdoc.version>2.5.0</springdoc.version>
         <jakarta-servlet.version>6.1.0</jakarta-servlet.version>
