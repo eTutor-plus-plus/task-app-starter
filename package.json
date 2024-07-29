@@ -10,7 +10,7 @@
         "commit-and-tag-version": "^12.0.0",
         "commitizen": "^4.3.0",
         "cz-conventional-changelog": "^3.3.0",
-        "fast-xml-parser": "^4.3.2"
+        "fast-xml-parser": "^4.4.1"
     },
     "config": {
         "commitizen": {
